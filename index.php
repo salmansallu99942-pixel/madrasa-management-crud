@@ -45,13 +45,23 @@
                 </a>
 
                 <a href="pages/results.php" class="menu-item">
+                    <i class="bi bi-bar-chart"></i>
+                    <span>Results</span>
+                </a>
+
+                <a href="pages/fees.php" class="menu-item">
+                    <i class="bi bi-cash-stack"></i>
+                    <span>Fees & Payments</span>
+                </a>
+
+                <a href="pages/results.php" class="menu-item">
                     <i class="bi bi-person-badge"></i>
                     <span>Teachers</span>
                 </a>
             </nav>
 
             <div class="sidebar-bottom">
-                <a href="#" class="menu-item">
+                <a href="pages/settings.php" class="menu-item">
                     <i class="bi bi-gear"></i>
                     <span>Settings</span>
                 </a>
@@ -82,10 +92,43 @@
                     </div>
 
                     <!-- Notifications -->
-                    <button class="icon-button">
+                    <button class="icon-button" id="notificationButton">
                         <i class="bi bi-bell"></i>
                         <span class="notification-dot"></span>
                     </button>
+
+                    <div class="notification-panel" id="notificationPanel">
+
+                        <div class="notification-header">
+                            <h5>Notifications</h5>
+                            <span>3 New</span>
+                        </div>
+
+                        <div class="notification-item">
+                            <i class="bi bi-person-plus"></i>
+                            <div>
+                                <strong>New Student Added</strong>
+                                <small>Abdullah was added to the system.</small>
+                            </div>
+                        </div>
+
+                        <div class="notification-item">
+                            <i class="bi bi-calendar-check"></i>
+                            <div>
+                                <strong>Attendance Updated</strong>
+                                <small>Today's attendance has been updated.</small>
+                            </div>
+                        </div>
+
+                        <div class="notification-item">
+                            <i class="bi bi-cash-stack"></i>
+                            <div>
+                                <strong>Fee Payment</strong>
+                                <small>A fee payment was received.</small>
+                            </div>
+                        </div>
+
+                    </div>
 
                     <!-- Profile -->
                     <div class="profile">
