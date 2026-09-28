@@ -54,7 +54,7 @@
                     <span>Fees & Payments</span>
                 </a>
 
-                <a href="pages/results.php" class="menu-item">
+                <a href="pages/teachers.php" class="menu-item">
                     <i class="bi bi-person-badge"></i>
                     <span>Teachers</span>
                 </a>
@@ -88,7 +88,7 @@
                     <!-- Search -->
                     <div class="search-box">
                         <i class="bi bi-search"></i>
-                        <input type="text" placeholder="search...">
+                        <input type="text" id="dashboardSearch" placeholder="search...">
                     </div>
 
                     <!-- Notifications -->
@@ -131,7 +131,7 @@
                     </div>
 
                     <!-- Profile -->
-                    <div class="profile">
+                    <div class="profile" id="profileButton">
                         <div class="profile-avatar">
                             S
                         </div>
@@ -140,6 +140,40 @@
                             <strong>Salman</strong>
                             <small>Administrator</small>
                         </div>
+                    </div>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+
+                        <div class="profile-dropdown-header">
+                            <div class="profile-avatar">
+                                S
+                            </div>
+
+                            <div>
+                                <strong>Salman</strong>
+                                <small>Administrator</small>
+                            </div>
+                        </div>
+
+                        <div class="profile-dropdown-divider"></div>
+
+                        <a href="#" class="profile-dropdown-item">
+                            <i class="bi bi-person"></i>
+                            <span>My Profile</span>
+                        </a>
+
+                        <a href="pages/settings.php" class="profile-dropdown-item">
+                            <i class="bi bi-gear"></i>
+                            <span>Settings</span>
+                        </a>
+
+                        <div class="profile-dropdown-divider"></div>
+
+                        <a href="login.php" class="profile-dropdown-item logout-item">
+                            <i class="bi bi-box-arrow-right"></i>
+                            <span>Logout</span>
+                        </a>
+
                     </div>
 
                 </div>
@@ -156,7 +190,7 @@
                         <p>Here's what's happening in your madrasa today.</p>
                     </div>
 
-                    <button class="quick-add-btn">
+                    <button class="quick-add-btn" id="addStudentButton">
                         <i class="bi bi-plus-lg"></i>
                         Add Student
                     </button>
@@ -175,7 +209,7 @@
                                 <p>
                                 <h6>Total Students</h6>
                                 </p>
-                                <h3>24</h3>
+                                <h3 id="totalStudentsCount">24</h3>
                             </div>
 
                             <div class="stat-icon students-icon">
@@ -201,7 +235,7 @@
                         <div class="stat-card-top">
                             <div>
                                 <p>Present Today</p>
-                                <h3>20</h3>
+                                <h3 id="presentTodayCount">20</h3>
                             </div>
 
                             <div class="stat-icon attendance-icon">
@@ -227,7 +261,7 @@
                         <div class="stat-card-top">
                             <div>
                                 <p>Absent Today</p>
-                                <h3>4</h3>
+                                <h3 id="absentTodayCount">4</h3>
                             </div>
 
                             <div class="stat-icon absent-icon">
@@ -253,7 +287,7 @@
                         <div class="stat-card-top">
                             <div>
                                 <p>Total Teachers</p>
-                                <h3>2</h3>
+                                <h3 id="totalTeachersCount">2</h3>
                             </div>
 
                             <div class="stat-icon teacher-icon">
@@ -354,7 +388,7 @@
                         </div>
 
 
-                        <div class="student-list">
+                        <div class="student-list" id="dashboardStudentList">
 
                             <div class="student-item">
 
@@ -573,6 +607,110 @@
 
             </section>
         </main>
+    </div>
+
+    <!-- Add Student Modal -->
+
+    <div class="modal fade" id="dashboardAddStudentModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        <i class="bi bi-person-plus me-2"></i>
+                        Add Student
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label class="form-label">Student Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="dashboardStudentName"
+                                placeholder="Enter student name">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Roll Number</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="dashboardRollNumber"
+                                placeholder="Enter roll number">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Hifz Level</label>
+                            <select
+                                class="form-select"
+                                id="dashboardHifzLevel">
+
+                                <option value="">Select Hifz Level</option>
+                                <option value="Hifz Level 1">Hifz Level 1</option>
+                                <option value="Hifz Level 2">Hifz Level 2</option>
+                                <option value="Hifz Level 3">Hifz Level 3</option>
+                                <option value="Revision">Revision</option>
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Status</label>
+                            <select
+                                class="form-select"
+                                id="dashboardStudentStatus">
+
+                                <option value="">Select Status</option>
+                                <option value="Active">Active</option>
+                                <option value="Leave">Leave</option>
+                                <option value="Inactive">Inactive</option>
+
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="dashboardSaveStudent">
+                        <i class="bi bi-check-lg me-1"></i>
+                        Add Student
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script>

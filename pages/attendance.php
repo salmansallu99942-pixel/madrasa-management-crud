@@ -92,22 +92,45 @@
                 <div class="attendance-date-card">
 
                     <div class="attendance-date-info">
+
                         <i class="bi bi-calendar3"></i>
 
                         <div>
                             <span>Attendance Date</span>
-                            <strong>22 september 2026</strong>
+
+                            <strong id="attendanceDate">
+                                22 September 2026
+                            </strong>
                         </div>
 
                     </div>
 
+
                     <div class="attendance-date-actions">
-                        <button type="button" class="attendance-date-btn">
+
+                        <!-- Previous Date -->
+                        <button
+                            type="button"
+                            class="attendance-date-btn"
+                            id="previousDateBtn">
                             <i class="bi bi-chevron-left"></i>
                         </button>
 
-                        <button type="button" class="attendance-date-btn">Today</button>
-                        <button type="button" class="attendance-date-btn">
+
+                        <!-- Today -->
+                        <button
+                            type="button"
+                            class="attendance-date-btn"
+                            id="todayDateBtn">
+                            Today
+                        </button>
+
+
+                        <!-- Next Date -->
+                        <button
+                            type="button"
+                            class="attendance-date-btn"
+                            id="nextDateBtn">
                             <i class="bi bi-chevron-right"></i>
                         </button>
 
@@ -124,7 +147,7 @@
                         </div>
                         <div>
                             <span>Total Students</span>
-                            <strong>120</strong>
+                            <strong id="attendanceTotalStudents">120</strong>
                         </div>
                     </div>
 
@@ -134,7 +157,7 @@
                         </div>
                         <div>
                             <span>Present</span>
-                            <strong>105</strong>
+                            <strong id="attendancePresentCount">105</strong>
                         </div>
                     </div>
 
@@ -144,7 +167,7 @@
                         </div>
                         <div>
                             <span>Absent</span>
-                            <strong>10</strong>
+                            <strong id="attendanceAbsentCount">10</strong>
                         </div>
                     </div>
 
@@ -154,7 +177,7 @@
                         </div>
                         <div>
                             <span>Leave</span>
-                            <strong>5</strong>
+                            <strong id="attendanceLeaveCount">5</strong>
                         </div>
                     </div>
 
@@ -248,10 +271,10 @@
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody id="attendanceTableBody">
 
                                 <!-- Student 1 -->
-                                <tr>
+                                <tr data-roll="001">
                                     <td>001</td>
 
                                     <td>
@@ -294,7 +317,7 @@
                                 </tr>
 
                                 <!-- Student 2 -->
-                                <tr>
+                                <tr data-roll="002">
                                     <td>002</td>
 
                                     <td>
@@ -337,7 +360,7 @@
                                 </tr>
 
                                 <!-- Student 3 -->
-                                <tr>
+                                <tr data-roll="003">
                                     <td>003</td>
 
                                     <td>
@@ -380,7 +403,7 @@
                                 </tr>
 
                                 <!-- Student 4 -->
-                                <tr>
+                                <tr data-roll="004">
                                     <td>004</td>
 
                                     <td>
@@ -441,7 +464,7 @@
                                 Reset
                             </button>
 
-                            <button type="button" class="attendance-save-btn">
+                            <button type="button" class="attendance-save-btn" id="saveAttendanceBtn">
                                 <i class="bi bi-check2-circle"></i>
                                 Save Attendance
                             </button>
@@ -486,7 +509,7 @@
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody id="attendanceHistoryTableBody">
 
                                 <tr>
                                     <td>22 Sep 2026</td>

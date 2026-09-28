@@ -233,13 +233,9 @@
                     <select id="hifzFilter">
 
                         <option value="">All Hifz Levels</option>
-
                         <option value="Hifz Level 1">Hifz Level 1</option>
-
                         <option value="Hifz Level 2">Hifz Level 2</option>
-
                         <option value="Hifz Level 3">Hifz Level 3</option>
-
                         <option value="Revision">Revision</option>
 
                     </select>
@@ -250,11 +246,8 @@
                     <select id="statusFilter">
 
                         <option value="">All Status</option>
-
                         <option value="Active">Active</option>
-
                         <option value="Leave">Leave</option>
-
                         <option value="Inactive">Inactive</option>
 
                     </select>
@@ -280,7 +273,7 @@
                             <p>List of all madrasa students</p>
                         </div>
 
-                        <span class="student-count">
+                        <span class="student-count" id="studentCount">
                             4 Students
                         </span>
                     </div>
@@ -300,7 +293,7 @@
                                 </tr>
                             </thead>
 
-                            <tbody>
+                            <tbody id="studentsTableBody">
 
                                 <tr>
                                     <td>001</td>
