@@ -396,36 +396,7 @@ if (studentsTableBody) {
 
     if (!studentsData) {
 
-        studentsData = [
-            {
-                roll: "001",
-                name: "Abdullah",
-                hifzLevel: "Hifz Level 2",
-                attendance: "92%",
-                status: "Active"
-            },
-            {
-                roll: "002",
-                name: "Muhammad",
-                hifzLevel: "Hifz Level 1",
-                attendance: "88%",
-                status: "Active"
-            },
-            {
-                roll: "003",
-                name: "Ibrahim",
-                hifzLevel: "Revision",
-                attendance: "95%",
-                status: "Active"
-            },
-            {
-                roll: "004",
-                name: "Yusuf",
-                hifzLevel: "Hifz Level 3",
-                attendance: "76%",
-                status: "Leave"
-            }
-        ];
+        studentsData = [];
 
         localStorage.setItem(
             "studentsData",
@@ -433,6 +404,8 @@ if (studentsTableBody) {
         );
     }
 }
+
+
 // ========================================
 // 12. STUDENTS PAGE SEARCH + FILTER
 // ========================================
@@ -441,6 +414,148 @@ const studentSearch = document.getElementById("studentSearch");
 const hifzFilter = document.getElementById("hifzFilter");
 const statusFilter = document.getElementById("statusFilter");
 const studentCount = document.getElementById("studentCount");
+let currentPage = 1;
+const studentsPerPage = 10;
+
+// ==========================================
+// STUDENTS PAGE - RENDER STUDENTS
+// WITH PAGINATION
+// ==========================================
+
+function renderStudentsTable() {
+
+    if (!studentsTableBody) {
+        return;
+    }
+
+    const studentsData =
+        JSON.parse(
+            localStorage.getItem("studentsData")
+        ) || [];
+
+    // Clear table
+    studentsTableBody.innerHTML = "";
+
+    // Calculate pagination
+    const totalStudents =
+        studentsData.length;
+
+    const totalPages =
+        Math.ceil(
+            totalStudents / studentsPerPage
+        );
+
+    // Keep current page valid
+    if (currentPage > totalPages && totalPages > 0) {
+        currentPage = totalPages;
+    }
+
+    if (totalPages === 0) {
+        currentPage = 1;
+    }
+
+    // Start and end index
+    const startIndex =
+        (currentPage - 1) *
+        studentsPerPage;
+
+    const endIndex =
+        startIndex +
+        studentsPerPage;
+
+    // Students for current page
+    const currentStudents =
+        studentsData.slice(
+            startIndex,
+            endIndex
+        );
+
+    // Create table rows
+    currentStudents.forEach(function (student) {
+
+        const newRow =
+            document.createElement("tr");
+
+        const firstLetter =
+            student.name
+                .charAt(0)
+                .toUpperCase();
+
+        newRow.innerHTML = `
+    < td > ${ student.roll }</td >
+
+            <td>
+                <div class="table-student">
+
+                    <div class="table-avatar">
+                        ${firstLetter}
+                    </div>
+
+                    <div>
+                        <strong>${student.name}</strong>
+                        <small>Hifz Student</small>
+                    </div>
+
+                </div>
+            </td>
+
+            <td>
+                <span class="level-badge">
+                    ${student.hifzLevel}
+                </span>
+            </td>
+
+            <td>
+                ${student.attendance}
+            </td>
+
+            <td>
+                <span class="status-badge active">
+                    ${student.status}
+                </span>
+            </td>
+
+            <td>
+
+                <button
+                    type="button"
+                    class="table-action">
+                    <i class="bi bi-eye"></i>
+                </button>
+
+                <button
+                    type="button"
+                    class="table-action">
+                    <i class="bi bi-pencil"></i>
+                </button>
+
+                <button
+                    type="button"
+                    class="table-action delete"
+                    data-roll="${student.roll}">
+                    <i class="bi bi-trash"></i>
+                </button>
+
+            </td>
+`;
+
+        studentsTableBody.appendChild(newRow);
+    });
+
+    // Update student count
+    if (studentCount) {
+
+        studentCount.textContent =
+            totalStudents +
+            (
+                totalStudents === 1
+                    ? " Student"
+                    : " Students"
+            );
+    }
+}
+
+
 
 if (
     studentSearch &&
@@ -529,6 +644,153 @@ if (
     );
 
 }
+
+// ==========================================
+// STUDENTS PAGE - PAGINATION CONTROLS
+// ==========================================
+
+const studentsPrevBtn =
+    document.getElementById("studentsPrevBtn");
+
+const studentsNextBtn =
+    document.getElementById("studentsNextBtn");
+
+const studentsPaginationNumbers =
+    document.getElementById(
+        "studentsPaginationNumbers"
+    );
+
+
+// Create pagination buttons
+function updateStudentsPagination() {
+
+    if (!studentsPaginationNumbers) {
+        return;
+    }
+
+    const studentsData =
+        JSON.parse(
+            localStorage.getItem("studentsData")
+        ) || [];
+
+    const totalStudents =
+        studentsData.length;
+
+    const totalPages =
+        Math.ceil(
+            totalStudents / studentsPerPage
+        );
+
+    studentsPaginationNumbers.innerHTML = "";
+
+
+    // No students
+    if (totalPages === 0) {
+
+        if (studentsPrevBtn) {
+            studentsPrevBtn.disabled = true;
+        }
+
+        if (studentsNextBtn) {
+            studentsNextBtn.disabled = true;
+        }
+
+        return;
+    }
+
+
+    // Create page numbers
+    for (
+        let page = 1;
+        page <= totalPages;
+        page++
+    ) {
+
+        const pageButton =
+            document.createElement("button");
+
+        pageButton.type = "button";
+
+        pageButton.className =
+            "pagination-number";
+
+        pageButton.textContent = page;
+
+
+        if (page === currentPage) {
+            pageButton.classList.add("active");
+        }
+
+
+        pageButton.addEventListener(
+            "click",
+            function () {
+
+                currentPage = page;
+
+                renderStudentsTable();
+
+                updateStudentsPagination();
+
+            }
+        );
+
+
+        studentsPaginationNumbers.appendChild(
+            pageButton
+        );
+    }
+
+
+    // Previous button
+    if (studentsPrevBtn) {
+
+        studentsPrevBtn.disabled =
+            currentPage === 1;
+
+        studentsPrevBtn.onclick =
+            function () {
+
+                if (currentPage > 1) {
+
+                    currentPage--;
+
+                    renderStudentsTable();
+
+                    updateStudentsPagination();
+                }
+            };
+    }
+
+
+    // Next button
+    if (studentsNextBtn) {
+
+        studentsNextBtn.disabled =
+            currentPage === totalPages;
+
+        studentsNextBtn.onclick =
+            function () {
+
+                if (
+                    currentPage < totalPages
+                ) {
+
+                    currentPage++;
+
+                    renderStudentsTable();
+
+                    updateStudentsPagination();
+                }
+            };
+    }
+}
+
+
+// Initial pagination
+updateStudentsPagination();
+
+
 // ========================================
 // DASHBOARD - ATTENDANCE SYNC
 // ========================================
@@ -1369,11 +1631,8 @@ if (attendanceHistoryTableBody) {
 // STUDENTS PAGE - ADD STUDENT
 // ==========================================
 
-const addStudentForm =
-    document.getElementById("addStudentForm");
-
-const addStudentBtn =
-    document.getElementById("addStudentBtn");
+const addStudentForm = document.getElementById("addStudentForm");
+const addStudentBtn = document.getElementById("addStudentBtn");
 
 if (
     addStudentForm &&
@@ -1385,20 +1644,11 @@ if (
     addStudentBtn.addEventListener("click", function () {
 
         // Get form values
-        const rollNumber =
-            document.getElementById("rollNumber").value.trim();
-
-        const studentName =
-            document.getElementById("studentName").value.trim();
-
-        const hifzLevel =
-            document.getElementById("studentHifzLevel").value;
-
-        const studentPhone =
-            document.getElementById("studentPhone").value.trim();
-
-        const joiningDate =
-            document.getElementById("joiningDate").value;
+        const rollNumber = document.getElementById("rollNumber").value.trim();
+        const studentName = document.getElementById("studentName").value.trim();
+        const hifzLevel = document.getElementById("studentHifzLevel").value;
+        const studentPhone = document.getElementById("studentPhone").value.trim();
+        const joiningDate = document.getElementById("joiningDate").value;
 
         // Check required fields
         if (
@@ -1413,11 +1663,8 @@ if (
         }
 
         // Check duplicate roll number
-        const existingRows =
-            studentsTableBody.querySelectorAll("tr");
-
+        const existingRows = studentsTableBody.querySelectorAll("tr");
         let rollExists = false;
-
         existingRows.forEach(function (row) {
 
             const existingRoll =
@@ -1436,11 +1683,9 @@ if (
         }
 
         // Create new row
-        const newRow =
-            document.createElement("tr");
-
-        const firstLetter =
-            studentName.charAt(0).toUpperCase();
+        const newRow = document.createElement("tr");
+        newRow.setAttribute("data-roll", rollNumber);
+        const firstLetter = studentName.charAt(0).toUpperCase();
 
         newRow.innerHTML = `
             <td>${rollNumber}</td>
@@ -1487,7 +1732,8 @@ if (
 
                 <button
                     type="button"
-                    class="table-action delete">
+                    class="table-action delete"
+                    data-roll="${rollNumber}">
                     <i class="bi bi-trash"></i>
                 </button>
             </td>
@@ -1496,8 +1742,7 @@ if (
         studentsTableBody.appendChild(newRow);
 
         // Update student count
-        const totalStudents =
-            studentsTableBody.querySelectorAll("tr").length;
+        const totalStudents = studentsTableBody.querySelectorAll("tr").length;
 
         studentCount.textContent =
             totalStudents + " Students";
@@ -1546,6 +1791,158 @@ if (
             );
 
             modalInstance.hide();
-        } 
+        }
     });
-}    
+}
+
+// ==========================================
+// STUDENTS PAGE - DELETE STUDENT
+// ==========================================
+let selectedStudentRoll = null;
+let selectedStudentRow = null;
+
+// Trash button click
+if (studentsTableBody) {
+
+    studentsTableBody.addEventListener("click", function (event) {
+
+        const deleteButton = event.target.closest(".table-action.delete");
+
+        if (!deleteButton) {
+            return;
+        }
+
+        selectedStudentRoll = deleteButton.getAttribute("data-roll");
+        console.log("Trash data-roll:",
+            selectedStudentRoll
+        )
+        selectedStudentRow = deleteButton.closest("tr");
+
+
+
+        if (!selectedStudentRoll || !selectedStudentRow) {
+            return;
+        }
+
+        const studentName =
+            selectedStudentRow.cells[1]
+                .textContent
+                .trim();
+
+        // Put student name inside delete modal
+        const deleteModal = document.getElementById("deleteStudentModal");
+        const message = deleteModal.querySelector("p strong");
+
+        if (message) {
+            message.textContent = studentName;
+        }
+
+        const modal = bootstrap.Modal.getOrCreateInstance(
+            deleteModal
+        );
+
+        modal.show();
+    });
+}
+
+// ==========================================
+// CONFIRM DELETE BUTTON
+// ==========================================
+
+const confirmDeleteStudentBtn =
+    document.getElementById("confirmDeleteStudentBtn");
+
+if (confirmDeleteStudentBtn) {
+
+    console.log("Delete button found");
+
+    confirmDeleteStudentBtn.addEventListener(
+        "click",
+        function () {
+
+            console.log("delete clicked");
+
+            console.log(
+                "Selected Roll:",
+                selectedStudentRoll
+            );
+
+            if (
+                !selectedStudentRoll ||
+                !selectedStudentRow
+            ) {
+                return;
+            }
+
+            let studentsData =
+                JSON.parse(
+                    localStorage.getItem("studentsData")
+                ) || [];
+
+            studentsData =
+                studentsData.filter(function (student) {
+
+                    return String(student.roll) !==
+                        String(selectedStudentRoll);
+
+                });
+
+            localStorage.setItem(
+                "studentsData",
+                JSON.stringify(studentsData)
+            );
+
+            // Remove row from table
+            selectedStudentRow.remove();
+
+            // Update student count
+            if (studentCount) {
+
+                const remainingStudents =
+                    studentsTableBody.querySelectorAll("tr").length;
+
+                studentCount.textContent =
+                    remainingStudents +
+                    (
+                        remainingStudents === 1
+                            ? " Student"
+                            : " Students"
+                    );
+            }
+
+            // Close delete modal
+            const deleteModalElement =
+                document.getElementById(
+                    "deleteStudentModal"
+                );
+
+            const deleteModal =
+                bootstrap.Modal.getInstance(
+                    deleteModalElement
+                );
+
+            if (deleteModal) {
+
+                deleteModalElement.addEventListener(
+                    "hidden.bs.modal",
+                    function () {
+
+                        if (document.activeElement) {
+                            document.activeElement.blur();
+                        }
+
+                    },
+                    { once: true }
+                );
+
+                deleteModal.hide();
+            }
+
+            // Reset selected student
+            selectedStudentRoll = null;
+            selectedStudentRow = null;
+
+        }
+    );
+}
+

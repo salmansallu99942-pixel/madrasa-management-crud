@@ -350,7 +350,8 @@
                                             type="button"
                                             class="table-action delete"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#deleteStudentModal">
+                                            data-bs-target="#deleteStudentModal"
+                                            data-roll="001">
 
                                             <i class="bi bi-trash"></i>
 
@@ -398,7 +399,7 @@
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
-                                        <button class="table-action delete">
+                                        <button class="table-action delete" data-roll="002">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
@@ -448,7 +449,8 @@
                                             type="button"
                                             class="table-action delete"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#deleteStudentModal">
+                                            data-bs-target="#deleteStudentModal"
+                                            data-roll="003">
 
                                             <i class="bi bi-trash"></i>
 
@@ -496,7 +498,7 @@
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
-                                        <button class="table-action delete">
+                                        <button class="table-action delete" data-roll="004">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </td>
@@ -509,12 +511,12 @@
 
                         <div class="students-pagination">
 
-                            <button class="pagination-btn">
+                            <button class="pagination-btn" type="button" id="studentsPreBtn">
                                 <i class="bi bi-chevron-left"></i>
                                 Previous
                             </button>
 
-                            <div class="pagination-numbers">
+                            <div class="pagination-numbers" id="studentsPaginationNumbers">
 
                                 <button class="pagination-number active">
                                     1
@@ -538,7 +540,7 @@
 
                             </div>
 
-                            <button class="pagination-btn">
+                            <button class="pagination-btn" type="button" id="studentNextBtn">
                                 Next
                                 <i class="bi bi-chevron-right"></i>
                             </button>
@@ -1211,7 +1213,8 @@
 
                     <button
                         type="button"
-                        class="btn btn-danger">
+                        class="btn btn-danger"
+                        id="confirmDeleteStudentBtn">
 
                         <i class="bi bi-trash"></i>
 
