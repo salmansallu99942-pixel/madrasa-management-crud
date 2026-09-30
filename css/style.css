@@ -9039,3 +9039,449 @@ body{
 .profile-dropdown-item.logout-item {
     color: #dc3545;
 }
+
+/* ================================
+   Notification Panel
+================================ */
+
+.notification-panel {
+    position: absolute;
+    top: 70px;
+    right: 80px;
+    width: 300px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+    display: none;
+    z-index: 1000;
+}
+
+.notification-panel.show {
+    display: block;
+}
+
+.notification-panel h6 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.notification-panel p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+
+/* ================================
+   Notification
+================================ */
+
+.notification-wrapper {
+    position: relative;
+}
+
+.notification-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+
+    width: 300px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 18px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+    display: none;
+    z-index: 1000;
+}
+
+.notification-panel.show {
+    display: block;
+}
+
+
+/* ================================
+   Profile
+================================ */
+
+.profile-wrapper {
+    position: relative;
+}
+
+.profile {
+    cursor: pointer;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+
+    width: 220px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 15px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+    display: none;
+    z-index: 1000;
+}
+
+.profile-dropdown.show {
+    display: block;
+}
+.notification-wrapper {
+    position: relative;
+}
+
+.profile-wrapper {
+    position: relative;
+}
+/* Profile Dropdown Buttons */
+
+.profile-dropdown button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 12px;
+    margin-top: 5px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: transparent;
+    color: #374151;
+
+    font-size: 14px;
+    text-align: left;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.profile-dropdown button i {
+    font-size: 16px;
+}
+
+.profile-dropdown button:hover {
+    background: #f3f4f6;
+}
+
+.profile-dropdown button:active {
+    transform: scale(0.98);
+}
+/* ========================================
+   VIEW STUDENT MODAL
+======================================== */
+
+/* Profile Header */
+
+.student-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 22px 24px;
+    border-bottom: 1px solid #e9ecef;
+    background: #f8f9fa;
+}
+
+.profile-large-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.student-profile-name h4 {
+    margin: 0 0 5px;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.student-profile-name p {
+    margin: 0 0 7px;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.profile-active-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+
+    background: #d1e7dd;
+    color: #146c43;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* ========================================
+   PROFILE BODY
+======================================== */
+
+#viewStudentModal .modal-body {
+    padding: 24px;
+}
+
+
+/* ========================================
+   ALL PROFILE SECTIONS
+======================================== */
+
+#viewStudentModal .profile-section {
+    margin-bottom: 26px;
+}
+
+#viewStudentModal .profile-section:last-child {
+    margin-bottom: 0;
+}
+
+#viewStudentModal .profile-section h5 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 14px;
+
+    font-size: 17px;
+    font-weight: 700;
+    color: #212529;
+}
+
+#viewStudentModal .profile-section h5 i {
+    font-size: 18px;
+    color: #0d6efd;
+}
+
+
+/* ========================================
+   BASIC INFORMATION
+======================================== */
+
+#viewStudentModal .profile-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+#viewStudentModal .profile-info-item {
+    padding: 14px 15px;
+
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+
+    background: #fff;
+}
+
+#viewStudentModal .profile-info-item span {
+    display: block;
+    margin-bottom: 5px;
+
+    font-size: 13px;
+    color: #6c757d;
+}
+
+#viewStudentModal .profile-info-item strong {
+    display: block;
+
+    font-size: 15px;
+    font-weight: 600;
+    color: #212529;
+}
+
+
+/* ========================================
+   ATTENDANCE
+======================================== */
+
+#viewStudentModal .profile-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+#viewStudentModal .profile-stat {
+    padding: 18px 12px;
+
+    text-align: center;
+
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+
+    background: #fff;
+}
+
+#viewStudentModal .profile-stat span {
+    display: block;
+    margin-bottom: 6px;
+
+    font-size: 13px;
+    color: #6c757d;
+}
+
+#viewStudentModal .profile-stat strong {
+    display: block;
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* Present */
+
+#viewStudentModal .profile-stat:nth-child(1) strong {
+    color: #198754;
+}
+
+/* Absent */
+
+#viewStudentModal .profile-stat:nth-child(2) strong {
+    color: #dc3545;
+}
+
+/* Leave */
+
+#viewStudentModal .profile-stat:nth-child(3) strong {
+    color: #fd7e14;
+}
+
+
+/* ========================================
+   HIFZ PROGRESS
+======================================== */
+
+#viewStudentModal .profile-progress {
+    padding: 17px;
+
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+
+    background: #fff;
+}
+
+#viewStudentModal .profile-progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+}
+
+#viewStudentModal .profile-progress-header span {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+#viewStudentModal .profile-progress-header strong {
+    font-size: 17px;
+    font-weight: 700;
+    color: #212529;
+}
+
+
+/* Progress bar */
+
+#viewStudentModal .profile-progress .progress {
+    height: 10px;
+    border-radius: 10px;
+
+    background: #e9ecef;
+    overflow: hidden;
+}
+
+#viewStudentModal .profile-progress .progress-bar {
+    border-radius: 10px;
+    background: #0d6efd;
+}
+
+
+/* Completed / Remaining */
+
+#viewStudentModal .profile-progress-details {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-top: 12px;
+}
+
+#viewStudentModal .profile-progress-details > div {
+    flex: 1;
+
+    padding: 12px;
+
+    border: 1px solid #e9ecef;
+    border-radius: 9px;
+
+    background: #f8f9fa;
+}
+
+#viewStudentModal .profile-progress-details span {
+    display: block;
+    margin-bottom: 4px;
+
+    font-size: 13px;
+    color: #6c757d;
+}
+
+#viewStudentModal .profile-progress-details strong {
+    font-size: 15px;
+    font-weight: 600;
+    color: #212529;
+}
+
+
+/* ========================================
+   MODAL FOOTER
+======================================== */
+
+#viewStudentModal .modal-footer {
+    padding: 14px 24px;
+
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 576px) {
+
+    #viewStudentModal .modal-body {
+        padding: 18px;
+    }
+
+    #viewStudentModal .profile-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #viewStudentModal .profile-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #viewStudentModal .profile-progress-details {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

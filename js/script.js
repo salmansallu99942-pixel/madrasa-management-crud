@@ -382,413 +382,6 @@ if (totalTeachersCount) {
 
     }
 }
-// ==========================================
-// STUDENTS PAGE - DATA SOURCE
-// ==========================================
-
-const studentsTableBody =
-    document.getElementById("studentsTableBody");
-
-if (studentsTableBody) {
-
-    let studentsData =
-        JSON.parse(localStorage.getItem("studentsData"));
-
-    if (!studentsData) {
-
-        studentsData = [];
-
-        localStorage.setItem(
-            "studentsData",
-            JSON.stringify(studentsData)
-        );
-    }
-}
-
-
-// ========================================
-// 12. STUDENTS PAGE SEARCH + FILTER
-// ========================================
-
-const studentSearch = document.getElementById("studentSearch");
-const hifzFilter = document.getElementById("hifzFilter");
-const statusFilter = document.getElementById("statusFilter");
-const studentCount = document.getElementById("studentCount");
-let currentPage = 1;
-const studentsPerPage = 10;
-
-// ==========================================
-// STUDENTS PAGE - RENDER STUDENTS
-// WITH PAGINATION
-// ==========================================
-
-function renderStudentsTable() {
-
-    if (!studentsTableBody) {
-        return;
-    }
-
-    const studentsData =
-        JSON.parse(
-            localStorage.getItem("studentsData")
-        ) || [];
-
-    // Clear table
-    studentsTableBody.innerHTML = "";
-
-    // Calculate pagination
-    const totalStudents =
-        studentsData.length;
-
-    const totalPages =
-        Math.ceil(
-            totalStudents / studentsPerPage
-        );
-
-    // Keep current page valid
-    if (currentPage > totalPages && totalPages > 0) {
-        currentPage = totalPages;
-    }
-
-    if (totalPages === 0) {
-        currentPage = 1;
-    }
-
-    // Start and end index
-    const startIndex =
-        (currentPage - 1) *
-        studentsPerPage;
-
-    const endIndex =
-        startIndex +
-        studentsPerPage;
-
-    // Students for current page
-    const currentStudents =
-        studentsData.slice(
-            startIndex,
-            endIndex
-        );
-
-    // Create table rows
-    currentStudents.forEach(function (student) {
-
-        const newRow =
-            document.createElement("tr");
-
-        const firstLetter =
-            student.name
-                .charAt(0)
-                .toUpperCase();
-
-        newRow.innerHTML = `
-    < td > ${ student.roll }</td >
-
-            <td>
-                <div class="table-student">
-
-                    <div class="table-avatar">
-                        ${firstLetter}
-                    </div>
-
-                    <div>
-                        <strong>${student.name}</strong>
-                        <small>Hifz Student</small>
-                    </div>
-
-                </div>
-            </td>
-
-            <td>
-                <span class="level-badge">
-                    ${student.hifzLevel}
-                </span>
-            </td>
-
-            <td>
-                ${student.attendance}
-            </td>
-
-            <td>
-                <span class="status-badge active">
-                    ${student.status}
-                </span>
-            </td>
-
-            <td>
-
-                <button
-                    type="button"
-                    class="table-action">
-                    <i class="bi bi-eye"></i>
-                </button>
-
-                <button
-                    type="button"
-                    class="table-action">
-                    <i class="bi bi-pencil"></i>
-                </button>
-
-                <button
-                    type="button"
-                    class="table-action delete"
-                    data-roll="${student.roll}">
-                    <i class="bi bi-trash"></i>
-                </button>
-
-            </td>
-`;
-
-        studentsTableBody.appendChild(newRow);
-    });
-
-    // Update student count
-    if (studentCount) {
-
-        studentCount.textContent =
-            totalStudents +
-            (
-                totalStudents === 1
-                    ? " Student"
-                    : " Students"
-            );
-    }
-}
-
-
-
-if (
-    studentSearch &&
-    studentsTableBody &&
-    hifzFilter &&
-    statusFilter
-) {
-
-    function filterStudents() {
-
-        const searchValue =
-            studentSearch.value.toLowerCase().trim();
-
-        const selectedHifz =
-            hifzFilter.value.toLowerCase();
-
-        const selectedStatus =
-            statusFilter.value.toLowerCase();
-
-        const studentRows =
-            studentsTableBody.querySelectorAll("tr");
-
-
-        studentRows.forEach(function (row) {
-
-            const rowText =
-                row.textContent.toLowerCase();
-
-            const matchesSearch =
-                rowText.includes(searchValue);
-
-            const matchesHifz =
-                selectedHifz === "" ||
-                rowText.includes(selectedHifz);
-
-            const matchesStatus =
-                selectedStatus === "" ||
-                rowText.includes(selectedStatus);
-
-            if (
-                matchesSearch &&
-                matchesHifz &&
-                matchesStatus
-            ) {
-
-                row.style.display = "";
-
-            } else {
-
-                row.style.display = "none";
-
-            }
-
-        });
-        if (studentCount) {
-
-            const visibleStudents =
-                Array.from(studentRows).filter(function (row) {
-
-                    return row.style.display !== "none";
-
-                }).length;
-
-            studentCount.textContent =
-                visibleStudents +
-                (visibleStudents === 1 ? " Student" : " Students");
-
-        }
-
-    }
-
-
-    studentSearch.addEventListener(
-        "input",
-        filterStudents
-    );
-
-    hifzFilter.addEventListener(
-        "change",
-        filterStudents
-    );
-
-    statusFilter.addEventListener(
-        "change",
-        filterStudents
-    );
-
-}
-
-// ==========================================
-// STUDENTS PAGE - PAGINATION CONTROLS
-// ==========================================
-
-const studentsPrevBtn =
-    document.getElementById("studentsPrevBtn");
-
-const studentsNextBtn =
-    document.getElementById("studentsNextBtn");
-
-const studentsPaginationNumbers =
-    document.getElementById(
-        "studentsPaginationNumbers"
-    );
-
-
-// Create pagination buttons
-function updateStudentsPagination() {
-
-    if (!studentsPaginationNumbers) {
-        return;
-    }
-
-    const studentsData =
-        JSON.parse(
-            localStorage.getItem("studentsData")
-        ) || [];
-
-    const totalStudents =
-        studentsData.length;
-
-    const totalPages =
-        Math.ceil(
-            totalStudents / studentsPerPage
-        );
-
-    studentsPaginationNumbers.innerHTML = "";
-
-
-    // No students
-    if (totalPages === 0) {
-
-        if (studentsPrevBtn) {
-            studentsPrevBtn.disabled = true;
-        }
-
-        if (studentsNextBtn) {
-            studentsNextBtn.disabled = true;
-        }
-
-        return;
-    }
-
-
-    // Create page numbers
-    for (
-        let page = 1;
-        page <= totalPages;
-        page++
-    ) {
-
-        const pageButton =
-            document.createElement("button");
-
-        pageButton.type = "button";
-
-        pageButton.className =
-            "pagination-number";
-
-        pageButton.textContent = page;
-
-
-        if (page === currentPage) {
-            pageButton.classList.add("active");
-        }
-
-
-        pageButton.addEventListener(
-            "click",
-            function () {
-
-                currentPage = page;
-
-                renderStudentsTable();
-
-                updateStudentsPagination();
-
-            }
-        );
-
-
-        studentsPaginationNumbers.appendChild(
-            pageButton
-        );
-    }
-
-
-    // Previous button
-    if (studentsPrevBtn) {
-
-        studentsPrevBtn.disabled =
-            currentPage === 1;
-
-        studentsPrevBtn.onclick =
-            function () {
-
-                if (currentPage > 1) {
-
-                    currentPage--;
-
-                    renderStudentsTable();
-
-                    updateStudentsPagination();
-                }
-            };
-    }
-
-
-    // Next button
-    if (studentsNextBtn) {
-
-        studentsNextBtn.disabled =
-            currentPage === totalPages;
-
-        studentsNextBtn.onclick =
-            function () {
-
-                if (
-                    currentPage < totalPages
-                ) {
-
-                    currentPage++;
-
-                    renderStudentsTable();
-
-                    updateStudentsPagination();
-                }
-            };
-    }
-}
-
-
-// Initial pagination
-updateStudentsPagination();
 
 
 // ========================================
@@ -1627,322 +1220,1005 @@ if (attendanceHistoryTableBody) {
     }
 
 }
-// ==========================================
-// STUDENTS PAGE - ADD STUDENT
-// ==========================================
 
-const addStudentForm = document.getElementById("addStudentForm");
-const addStudentBtn = document.getElementById("addStudentBtn");
+// ========================================
+// STUDENTS PAGE
+// ========================================
 
-if (
-    addStudentForm &&
-    addStudentBtn &&
-    studentsTableBody &&
-    studentCount
-) {
+// Student Data
+let students = [
+    {
+        roll: "001",
+        name: "Abdullah",
+        hifzLevel: "Hifz Level 2",
+        attendance: 92,
+        status: "Active",
+        phone: "9876543210",
+        joiningDate: "2026-06-10"
+    },
+    {
+        roll: "002",
+        name: "Muhammad",
+        hifzLevel: "Hifz Level 1",
+        attendance: 88,
+        status: "Active",
+        phone: "9876543211",
+        joiningDate: "2026-06-12"
+    },
+    {
+        roll: "003",
+        name: "Ibrahim",
+        hifzLevel: "Revision",
+        attendance: 95,
+        status: "Active",
+        phone: "9876543212",
+        joiningDate: "2026-06-15"
+    },
+    {
+        roll: "004",
+        name: "Yusuf",
+        hifzLevel: "Hifz Level 3",
+        attendance: 76,
+        status: "Leave",
+        phone: "9876543213",
+        joiningDate: "2026-06-18"
+    }
+];
 
-    addStudentBtn.addEventListener("click", function () {
 
-        // Get form values
-        const rollNumber = document.getElementById("rollNumber").value.trim();
-        const studentName = document.getElementById("studentName").value.trim();
-        const hifzLevel = document.getElementById("studentHifzLevel").value;
-        const studentPhone = document.getElementById("studentPhone").value.trim();
-        const joiningDate = document.getElementById("joiningDate").value;
+// ========================================
+// STUDENTS LOCAL STORAGE
+// ========================================
 
-        // Check required fields
-        if (
-            rollNumber === "" ||
-            studentName === "" ||
-            hifzLevel === "" ||
-            studentPhone === "" ||
-            joiningDate === ""
-        ) {
-            alert("Please fill all student details.");
-            return;
+const studentsTableBody = document.getElementById("studentsTableBody");
+const studentCount = document.getElementById("studentCount");
+
+let currentStudentPage = 1;
+const studentsPerPage = 5;
+
+const studentsPreBtn = document.getElementById("studentsPreBtn");
+const studentsPaginationNumbers = document.getElementById("studentsPaginationNumbers");
+const studentNextBtn = document.getElementById("studentNextBtn");
+
+
+// Load students from localStorage
+function loadStudentsData() {
+
+    const savedStudents = localStorage.getItem("studentsData");
+
+    if (savedStudents) {
+        students = JSON.parse(savedStudents);
+    } else {
+        localStorage.setItem("studentsData", JSON.stringify(students));
+    }
+
+}
+
+
+// Save students to localStorage
+function saveStudentsData() {
+
+    localStorage.setItem("studentsData", JSON.stringify(students));
+
+}
+
+// ========================================
+// STUDENTS PAGINATION
+// ========================================
+
+function getTotalStudentPages() {
+
+    return Math.ceil(
+        students.length / studentsPerPage
+    );
+
+}
+// ========================================
+// RENDER PAGINATION NUMBERS
+// ========================================
+
+function renderStudentPagination() {
+
+    if (!studentsPaginationNumbers) {
+        return;
+    }
+
+    const totalPages =
+        getTotalStudentPages();
+
+    studentsPaginationNumbers.innerHTML = "";
+
+    for (let page = 1; page <= totalPages; page++) {
+
+        const pageButton =
+            document.createElement("button");
+
+        pageButton.type = "button";
+
+        pageButton.className =
+            "pagination-number";
+
+        pageButton.textContent =
+            page;
+
+        if (page === currentStudentPage) {
+            pageButton.classList.add("active");
         }
 
-        // Check duplicate roll number
-        const existingRows = studentsTableBody.querySelectorAll("tr");
-        let rollExists = false;
-        existingRows.forEach(function (row) {
+        pageButton.addEventListener("click", function () {
 
-            const existingRoll =
-                row.cells[0]
-                    ? row.cells[0].textContent.trim()
-                    : "";
+            currentStudentPage = page;
+            renderStudentPagination();
+            renderStudentsTable();
 
-            if (existingRoll === rollNumber) {
-                rollExists = true;
-            }
         });
 
-        if (rollExists) {
-            alert("This roll number already exists.");
-            return;
+        studentsPaginationNumbers.appendChild(pageButton);
+    }
+}
+// ========================================
+// STUDENT PAGINATION - NEXT BUTTON
+// ========================================
+
+if (studentNextBtn) {
+
+    studentNextBtn.addEventListener("click", function() {
+
+        const totalPages =
+            getTotalStudentPages();
+
+        if (currentStudentPage < totalPages) {
+
+            currentStudentPage++;
+
+            renderStudentPagination();
+
+            renderStudentsTable();
         }
 
-        // Create new row
-        const newRow = document.createElement("tr");
-        newRow.setAttribute("data-roll", rollNumber);
-        const firstLetter = studentName.charAt(0).toUpperCase();
+    });
 
-        newRow.innerHTML = `
-            <td>${rollNumber}</td>
+}
+// ========================================
+// STUDENT PAGINATION - PREVIOUS BUTTON
+// ========================================
 
+if (studentsPreBtn) {
+
+    studentsPreBtn.addEventListener("click", function() {
+
+        if (currentStudentPage > 1) {
+
+            currentStudentPage--;
+
+            renderStudentPagination();
+
+            renderStudentsTable();
+        }
+
+    });
+
+}
+// ========================================
+// RENDER STUDENTS TABLE
+// ========================================
+
+function renderStudentsTable() {
+
+    if (!studentsTableBody) {
+        return;
+    }
+
+    // Sort students by roll number
+    students.sort(function (a, b) {
+        return Number(a.roll) - Number(b.roll);
+    });
+
+    const startIndex =
+        (currentStudentPage - 1) * studentsPerPage;
+
+    const endIndex =
+        startIndex + studentsPerPage;
+
+    const paginatedStudents =
+        students.slice(startIndex, endIndex);
+
+    studentsTableBody.innerHTML = "";
+    paginatedStudents.forEach(function (student) {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
             <td>
                 <div class="table-student">
                     <div class="table-avatar">
-                        ${firstLetter}
+                        ${student.name.charAt(0)}
                     </div>
 
                     <div>
-                        <strong>${studentName}</strong>
-                        <small>Hifz Student</small>
+                        <strong>${student.name}</strong>
+                        <small>Roll No: ${student.roll}</small>
                     </div>
                 </div>
             </td>
 
+            <td>${student.roll}</td>
+
             <td>
                 <span class="level-badge">
-                    ${hifzLevel}
+                    ${student.hifzLevel}
                 </span>
             </td>
 
-            <td>0%</td>
+            <td>${student.attendance}%</td>
 
             <td>
-                <span class="status-badge active">
-                    Active
+                <span class="status-badge ${student.status.toLowerCase()}">
+                    ${student.status}
                 </span>
             </td>
 
             <td>
-                <button
-                    type="button"
-                    class="table-action">
-                    <i class="bi bi-eye"></i>
-                </button>
+                <div class="table-actions">
 
-                <button
-                    type="button"
-                    class="table-action">
-                    <i class="bi bi-pencil"></i>
-                </button>
+                    <button
+                        type="button"
+                        class="table-action view-student-btn"
+                        data-roll="${student.roll}"
+                        title="View Student">
+                        <i class="bi bi-eye"></i>
+                    </button>
 
-                <button
-                    type="button"
-                    class="table-action delete"
-                    data-roll="${rollNumber}">
-                    <i class="bi bi-trash"></i>
-                </button>
+                    <button
+                        type="button"
+                        class="table-action edit-student-btn"
+                        data-roll="${student.roll}"
+                        title="Edit Student">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="table-action delete-student-btn"
+                        data-roll="${student.roll}"
+                        title="Delete Student">
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                </div>
+            </td>
+        `;
+        studentsTableBody.appendChild(row);
+    });
+
+    // Update student count
+    if (studentCount) {
+        studentCount.textContent =
+            `${students.length} Students`;
+
+    }
+
+}
+// ========================================
+// INITIALIZE STUDENTS PAGE
+// ========================================
+loadStudentsData();
+renderStudentsTable();
+renderStudentPagination();
+
+// ========================================
+// RENDER FILTERED STUDENTS
+// ========================================
+
+function renderFilteredStudents(filteredStudents) {
+
+    if (!studentsTableBody) {
+        return;
+    }
+
+    // Sort filtered students by roll number
+    filteredStudents.sort(function (a, b) {
+        return Number(a.roll) - Number(b.roll);
+    });
+
+    studentsTableBody.innerHTML = "";
+
+    filteredStudents.forEach(function (student) {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>
+                <div class="table-student">
+
+                    <div class="table-avatar">
+                        ${student.name.charAt(0)}
+                    </div>
+
+                    <div>
+                        <strong>${student.name}</strong>
+                        <small>Roll No: ${student.roll}</small>
+                    </div>
+
+                </div>
+            </td>
+
+            <td>${student.roll}</td>
+
+            <td>
+                <span class="level-badge">
+                    ${student.hifzLevel}
+                </span>
+            </td>
+
+            <td>${student.attendance}%</td>
+
+            <td>
+                <span class="status-badge ${student.status.toLowerCase()}">
+                    ${student.status}
+                </span>
+            </td>
+
+            <td>
+                <div class="table-actions">
+
+                    <button
+                        type="button"
+                        class="table-action view-student-btn"
+                        data-roll="${student.roll}"
+                        title="View Student">
+                        <i class="bi bi-eye"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="table-action edit-student-btn"
+                        data-roll="${student.roll}"
+                        title="Edit Student">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="table-action delete-student-btn"
+                        data-roll="${student.roll}"
+                        title="Delete Student">
+                        <i class="bi bi-trash"></i>
+                    </button>
+
+                </div>
             </td>
         `;
 
-        studentsTableBody.appendChild(newRow);
+        studentsTableBody.appendChild(row);
 
-        // Update student count
-        const totalStudents = studentsTableBody.querySelectorAll("tr").length;
+    });
+
+
+    // Update count
+    if (studentCount) {
 
         studentCount.textContent =
-            totalStudents + " Students";
+            `${filteredStudents.length} Students`;
 
-        // Save student information
-        const newStudent = {
-            roll: rollNumber,
-            name: studentName,
-            hifzLevel: hifzLevel,
-            phone: studentPhone,
-            joiningDate: joiningDate,
-            attendance: "0%",
-            status: "Active"
-        };
+    }
 
-        let savedStudents =
-            JSON.parse(
-                localStorage.getItem("studentsData")
-            ) || [];
-
-        savedStudents.push(newStudent);
-
-        localStorage.setItem(
-            "studentsData",
-            JSON.stringify(savedStudents)
-        );
-
-        // Clear form
-        addStudentForm.reset();
-
-        // Close Bootstrap modal
-        const modalElement =
-            document.getElementById("addStudentModal");
-
-        const modalInstance =
-            bootstrap.Modal.getInstance(modalElement);
-
-        if (modalInstance) {
-
-            modalElement.addEventListener(
-                "hidden.bs.modal",
-                function () {
-                    document.activeElement.blur();
-                },
-                { once: true }
-            );
-
-            modalInstance.hide();
-        }
-    });
 }
 
-// ==========================================
-// STUDENTS PAGE - DELETE STUDENT
-// ==========================================
-let selectedStudentRoll = null;
-let selectedStudentRow = null;
+// ========================================
+// STUDENT FILTERS
+// ========================================
 
-// Trash button click
-if (studentsTableBody) {
+const studentSearch = document.getElementById("studentSearch");
+const hifzFilter = document.getElementById("hifzFilter");
+const statusFilter = document.getElementById("statusFilter");
+const resetFilterBtn = document.querySelector(".filter-reset");
 
-    studentsTableBody.addEventListener("click", function (event) {
+// ========================================
+// FILTER STUDENTS
+// ========================================
 
-        const deleteButton = event.target.closest(".table-action.delete");
+function filterStudents() {
 
-        if (!deleteButton) {
-            return;
-        }
+    const searchValue =
+        studentSearch ? studentSearch.value.toLowerCase().trim() : "";
 
-        selectedStudentRoll = deleteButton.getAttribute("data-roll");
-        console.log("Trash data-roll:",
-            selectedStudentRoll
-        )
-        selectedStudentRow = deleteButton.closest("tr");
+    const selectedHifz =
+        hifzFilter ? hifzFilter.value : "";
+
+    const selectedStatus =
+        statusFilter ? statusFilter.value : "";
+
+    const filteredStudents = students.filter(function (student) {
+
+        const matchesSearch =
+            student.name.toLowerCase().includes(searchValue) ||
+            student.roll.toLowerCase().includes(searchValue);
+
+        const matchesHifz =
+            selectedHifz === "" ||
+            student.hifzLevel === selectedHifz;
+
+        const matchesStatus =
+            selectedStatus === "" ||
+            student.status === selectedStatus;
+
+        return matchesSearch && matchesHifz && matchesStatus;
+
+    });
 
 
+    renderFilteredStudents(filteredStudents);
 
-        if (!selectedStudentRoll || !selectedStudentRow) {
-            return;
-        }
+}
+// ========================================
+// FILTER EVENTS
+// ========================================
 
-        const studentName =
-            selectedStudentRow.cells[1]
-                .textContent
-                .trim();
+if (studentSearch) {
 
-        // Put student name inside delete modal
-        const deleteModal = document.getElementById("deleteStudentModal");
-        const message = deleteModal.querySelector("p strong");
+    studentSearch.addEventListener("input", function () {
 
-        if (message) {
-            message.textContent = studentName;
-        }
+        filterStudents();
 
-        const modal = bootstrap.Modal.getOrCreateInstance(
-            deleteModal
-        );
+    });
+
+}
+
+
+if (hifzFilter) {
+
+    hifzFilter.addEventListener("change", function () {
+
+        filterStudents();
+
+    });
+
+}
+// Status filter
+
+if (statusFilter) {
+
+    statusFilter.addEventListener("change", function () {
+
+        filterStudents();
+
+    });
+
+}
+if (resetFilterBtn) {
+
+    resetFilterBtn.addEventListener("click", function () {
+
+        studentSearch.value = "";
+        hifzFilter.value = "";
+        statusFilter.value = "";
+
+        filterStudents();
+
+    });
+
+}
+// ========================================
+// VIEW STUDENT
+// ========================================
+
+const viewStudentModal =
+    document.getElementById("viewStudentModal");
+
+
+document.addEventListener("click", function (event) {
+
+    const viewButton =
+        event.target.closest(".view-student-btn");
+
+    if (!viewButton) {
+        return;
+    }
+
+    const rollNumber =
+        viewButton.getAttribute("data-roll");
+
+    const student =
+        students.find(function (student) {
+            return student.roll === rollNumber;
+        });
+
+    if (!student) {
+        return;
+    }
+
+    // Fill student profile details
+
+    document.getElementById("viewStudentAvatar").textContent =
+        student.name.charAt(0);
+
+    document.getElementById("viewStudentName").textContent =
+        student.name;
+
+    document.getElementById("viewStudentRoll").textContent =
+        student.roll;
+
+    document.getElementById("viewStudentStatus").textContent =
+        student.status;
+
+
+    // Basic Information
+
+    document.getElementById("viewInfoName").textContent =
+        student.name;
+
+    document.getElementById("viewInfoRoll").textContent =
+        student.roll;
+
+    document.getElementById("viewInfoHifz").textContent =
+        student.hifzLevel;
+
+    document.getElementById("viewInfoPhone").textContent =
+        student.phone;
+
+    document.getElementById("viewInfoJoiningDate").textContent =
+        student.joiningDate;
+
+    document.getElementById("viewInfoStatus").textContent =
+        student.status;
+
+
+    // Attendance
+
+    document.getElementById("viewAttendancePresent").textContent =
+        student.attendance + "%";
+
+
+    // Open View Student Modal
+
+    if (viewStudentModal) {
+
+        const modal =
+            new bootstrap.Modal(viewStudentModal);
 
         modal.show();
-    });
-}
 
-// ==========================================
-// CONFIRM DELETE BUTTON
-// ==========================================
+    }
+});
+// ========================================
+// EDIT STUDENT - OPEN MODAL
+// ========================================
+
+const editStudentModal =
+    document.getElementById("editStudentModal");
+
+const editRollNumberInput =
+    document.getElementById("editRollNumber");
+
+const editStudentNameInput =
+    document.getElementById("editStudentName");
+
+const editStudentHifzLevelInput =
+    document.getElementById("editStudentHifzLevel");
+
+const editStudentPhoneInput =
+    document.getElementById("editStudentPhone");
+
+const editJoiningDateInput =
+    document.getElementById("editJoiningDate");
+
+const editStudentStatusInput =
+    document.getElementById("editStudentStatus");
+
+
+document.addEventListener("click", function (event) {
+
+    const editButton =
+        event.target.closest(".edit-student-btn");
+
+    if (!editButton) {
+        return;
+    }
+
+    const rollNumber =
+        editButton.getAttribute("data-roll");
+
+    const student =
+        students.find(function (student) {
+            return student.roll === rollNumber;
+        });
+
+    if (!student) {
+        return;
+    }
+
+    // Fill existing student details
+
+    editRollNumberInput.value =
+        student.roll;
+
+    editStudentNameInput.value =
+        student.name;
+
+    editStudentHifzLevelInput.value =
+        student.hifzLevel;
+
+    editStudentPhoneInput.value =
+        student.phone;
+
+    editJoiningDateInput.value =
+        student.joiningDate;
+
+    editStudentStatusInput.value =
+        student.status;
+
+
+    // Open Edit Student Modal
+
+    if (editStudentModal) {
+
+        const modal =
+            new bootstrap.Modal(editStudentModal);
+
+        modal.show();
+
+    }
+
+});
+// ========================================
+// EDIT STUDENT - SAVE CHANGES
+// ========================================
+
+const editStudentForm =
+    document.getElementById("editStudentForm");
+
+const saveEditStudentBtn =
+    document.getElementById("saveEditStudentBtn");
+
+
+if (saveEditStudentBtn) {
+
+    saveEditStudentBtn.addEventListener("click", function () {
+
+        const oldRollNumber =
+            editRollNumberInput.value.trim();
+
+        const studentName =
+            editStudentNameInput.value.trim();
+
+        const hifzLevel =
+            editStudentHifzLevelInput.value;
+
+        const phone =
+            editStudentPhoneInput.value.trim();
+
+        const joiningDate =
+            editJoiningDateInput.value;
+
+        const status =
+            editStudentStatusInput.value;
+
+
+        // Find student
+
+        const student =
+            students.find(function (student) {
+                return student.roll === oldRollNumber;
+            });
+
+
+        if (!student) {
+            alert("Student not found.");
+            return;
+        }
+
+
+        // Update student details
+
+        student.name =
+            studentName;
+
+        student.hifzLevel =
+            hifzLevel;
+
+        student.phone =
+            phone;
+
+        student.joiningDate =
+            joiningDate;
+
+        student.status =
+            status;
+
+
+        // Save updated data
+
+        saveStudentsData();
+
+
+        // Refresh table
+
+        renderStudentsTable();
+
+
+        // Close modal
+
+        if (editStudentModal) {
+
+            const modal =
+                bootstrap.Modal.getInstance(editStudentModal);
+
+            if (modal) {
+                modal.hide();
+            }
+
+        }
+
+
+        alert("Student details updated successfully!");
+
+    });
+
+}
+// ========================================
+// DELETE STUDENT
+// ========================================
+let studentToDeleteRoll = null;
+// ========================================
+// DELETE STUDENT - OPEN MODAL
+// ========================================
+
+const deleteStudentModal =
+    document.getElementById("deleteStudentModal");
+
+const deleteStudentName =
+    document.getElementById("deleteStudentName");
+
+
+document.addEventListener("click", function (event) {
+
+    const deleteButton =
+        event.target.closest(".delete-student-btn");
+
+
+    if (!deleteButton) {
+        return;
+    }
+
+
+    const rollNumber =
+        deleteButton.getAttribute("data-roll");
+    studentToDeleteRoll = rollNumber;
+
+
+    const student =
+        students.find(function (student) {
+            return student.roll === rollNumber;
+        });
+
+
+    if (!student) {
+        return;
+    }
+
+
+    // Show student name in delete confirmation
+
+    deleteStudentName.textContent =
+        student.name;
+
+
+    // Open Delete Student Modal
+
+    if (deleteStudentModal) {
+
+        const modal =
+            new bootstrap.Modal(deleteStudentModal);
+
+        modal.show();
+
+    }
+
+});
+// ========================================
+// DELETE STUDENT - CONFIRM DELETE
+// ========================================
 
 const confirmDeleteStudentBtn =
     document.getElementById("confirmDeleteStudentBtn");
 
+
 if (confirmDeleteStudentBtn) {
 
-    console.log("Delete button found");
+    confirmDeleteStudentBtn.addEventListener("click", function () {
 
-    confirmDeleteStudentBtn.addEventListener(
-        "click",
-        function () {
+        if (!studentToDeleteRoll) {
+            return;
+        }
 
-            console.log("delete clicked");
 
-            console.log(
-                "Selected Roll:",
-                selectedStudentRoll
-            );
+        // Find student index
 
-            if (
-                !selectedStudentRoll ||
-                !selectedStudentRow
-            ) {
-                return;
+        const studentIndex =
+            students.findIndex(function (student) {
+                return student.roll === studentToDeleteRoll;
+            });
+
+
+        if (studentIndex === -1) {
+            return;
+        }
+
+
+        // Remove student from array
+
+        students.splice(studentIndex, 1);
+
+
+        // Save updated students
+
+        saveStudentsData();
+
+
+        // Refresh table
+
+        renderStudentsTable();
+
+
+        // Close delete modal
+
+        if (deleteStudentModal) {
+
+            const modal =
+                bootstrap.Modal.getInstance(deleteStudentModal);
+
+            if (modal) {
+                modal.hide();
             }
-
-            let studentsData =
-                JSON.parse(
-                    localStorage.getItem("studentsData")
-                ) || [];
-
-            studentsData =
-                studentsData.filter(function (student) {
-
-                    return String(student.roll) !==
-                        String(selectedStudentRoll);
-
-                });
-
-            localStorage.setItem(
-                "studentsData",
-                JSON.stringify(studentsData)
-            );
-
-            // Remove row from table
-            selectedStudentRow.remove();
-
-            // Update student count
-            if (studentCount) {
-
-                const remainingStudents =
-                    studentsTableBody.querySelectorAll("tr").length;
-
-                studentCount.textContent =
-                    remainingStudents +
-                    (
-                        remainingStudents === 1
-                            ? " Student"
-                            : " Students"
-                    );
-            }
-
-            // Close delete modal
-            const deleteModalElement =
-                document.getElementById(
-                    "deleteStudentModal"
-                );
-
-            const deleteModal =
-                bootstrap.Modal.getInstance(
-                    deleteModalElement
-                );
-
-            if (deleteModal) {
-
-                deleteModalElement.addEventListener(
-                    "hidden.bs.modal",
-                    function () {
-
-                        if (document.activeElement) {
-                            document.activeElement.blur();
-                        }
-
-                    },
-                    { once: true }
-                );
-
-                deleteModal.hide();
-            }
-
-            // Reset selected student
-            selectedStudentRoll = null;
-            selectedStudentRow = null;
 
         }
-    );
+
+
+        // Reset selected student
+
+        studentToDeleteRoll = null;
+
+
+        alert("Student deleted successfully!");
+
+    });
+
+}
+// ========================================
+// SEARCH EVENT
+// ========================================
+if (studentSearch) {
+
+    studentSearch.addEventListener("input", function () {
+
+        filterStudents();
+
+    });
+
+}
+// ========================================
+// HIFZ FILTER EVENT
+// ========================================
+if (hifzFilter) {
+
+    hifzFilter.addEventListener("change", function () {
+
+        filterStudents();
+
+    });
+
+}
+// ========================================
+// CHECK DUPLICATE ROLL NUMBER
+// ========================================
+
+function isRollNumberExists(rollNumber) {
+
+    return students.some(function (student) {
+
+        return student.roll === rollNumber;
+
+    });
+
 }
 
+// ========================================
+// ADD STUDENT FORM
+// ========================================
+
+const addStudentForm = document.getElementById("addStudentForm");
+const rollNumberInput = document.getElementById("rollNumber");
+const studentNameInput = document.getElementById("studentName");
+const studentHifzLevelInput = document.getElementById("studentHifzLevel");
+const studentPhoneInput = document.getElementById("studentPhone");
+const joiningDateInput = document.getElementById("joiningDate");
+const addStudentBtn = document.getElementById("addStudentBtn");
+
+// ========================================
+// ADD STUDENT SUBMIT
+// ========================================
+
+if (addStudentForm) {
+
+    addStudentForm.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        const rollNumber = rollNumberInput.value.trim();
+        const studentName = studentNameInput.value.trim();
+        const hifzLevel = studentHifzLevelInput.value;
+        const phone = studentPhoneInput.value.trim();
+        const joiningDate = joiningDateInput.value;
+
+
+        // Check 3-digit roll number
+        if (!/^\d{3,}$/.test(rollNumber)) {
+
+            alert("Roll number must contain at least 3 digits.");
+
+            rollNumberInput.focus();
+
+            return;
+        }
+
+
+        // Check duplicate roll number
+        if (isRollNumberExists(rollNumber)) {
+
+            alert(
+                `Roll number ${rollNumber} has already been assigned.`
+            );
+
+            rollNumberInput.focus();
+
+            return;
+        }
+
+
+        // Create new student
+        const newStudent = {
+
+            roll: rollNumber,
+            name: studentName,
+            hifzLevel: hifzLevel,
+            attendance: 0,
+            status: "Active",
+            phone: phone,
+            joiningDate: joiningDate
+
+        };
+
+
+        // Add student to array
+        students.push(newStudent);
+
+
+        // Save to localStorage
+        saveStudentsData();
+
+
+        // Render updated table
+        renderStudentsTable();
+
+
+        // Reset form
+        addStudentForm.reset();
+
+
+        // Close modal
+        const addStudentModal =
+            document.getElementById("addStudentModal");
+
+        const modal =
+            bootstrap.Modal.getInstance(addStudentModal);
+
+        if (modal) {
+            modal.hide();
+        }
+
+
+        alert("Student added successfully!");
+
+    });
+
+}

@@ -15,159 +15,122 @@
 </head>
 
 <body>
-
     <div class="app">
-
         <!-- Sidebar -->
-
         <aside class="sidebar">
-
             <div class="brand">
-
                 <h3>Darussalam</h3>
-
                 <p>Madrasa Management</p>
-
             </div>
-
 
             <nav class="sidebar-menu">
-
                 <a href="../index.php" class="menu-item">
-
                     <i class="bi bi-grid"></i>
-
                     <span>Dashboard</span>
-
                 </a>
-
 
                 <a href="students.php" class="menu-item active">
-
                     <i class="bi bi-people"></i>
-
                     <span>Students</span>
-
                 </a>
-
 
                 <a href="attendance.php" class="menu-item">
-
                     <i class="bi bi-calendar-check"></i>
-
                     <span>Attendance</span>
-
                 </a>
-
 
                 <a href="hifz.php" class="menu-item">
-
                     <i class="bi bi-book"></i>
-
                     <span>Hifz</span>
-
                 </a>
-
 
                 <a href="results.php" class="menu-item">
-
                     <i class="bi bi-bar-chart"></i>
-
                     <span>Results</span>
-
                 </a>
-
 
                 <a href="teachers.php" class="menu-item">
-
                     <i class="bi bi-person-badge"></i>
-
                     <span>Teachers</span>
-
                 </a>
-
             </nav>
 
-
             <div class="sidebar-bottom">
-
                 <a href="#" class="menu-item">
-
                     <i class="bi bi-gear"></i>
-
                     <span>Settings</span>
-
                 </a>
-
             </div>
-
         </aside>
 
-
-
         <!-- Main Content -->
-
         <main class="main-content">
-
-
-            <!-- Top Navbar -->
-
+            <!-- top Navbar -->
             <header class="top-navbar">
 
                 <div class="navbar-left">
-
-                    <button class="sidebar-toggle">
-
+                    <button class="sidebar-toggle" id="sidebarToggle">
                         <i class="bi bi-list"></i>
-
                     </button>
 
-
                     <div>
-
                         <h5>Students</h5>
-
                         <p>Manage madrasa students</p>
-
                     </div>
-
                 </div>
-
 
                 <div class="navbar-right">
 
-                    <div class="search-box">
+                    <!-- Notification -->
+                    <div class="notification-wrapper">
 
-                        <i class="bi bi-search"></i>
+                        <button class="icon-button" id="notificationButton">
+                            <i class="bi bi-bell"></i>
+                            <span class="notification-dot"></span>
+                        </button>
 
-                        <input
-                            type="text"
-                            placeholder="Search...">
+                        <div class="notification-panel" id="notificationPanel">
+                            <h6>Notifications</h6>
+                            <p>No new notifications</p>
+                        </div>
 
                     </div>
 
 
-                    <button class="icon-button">
+                    <!-- Profile -->
+                    <div class="profile-wrapper">
 
-                        <i class="bi bi-bell"></i>
+                        <div class="profile" id="profileButton">
 
-                        <span class="notification-dot"></span>
+                            <div class="profile-avatar">
+                                S
+                            </div>
 
-                    </button>
+                            <div class="profile-info">
+                                <strong>Salman</strong>
+                                <small>Administrator</small>
+                            </div>
 
-
-                    <div class="profile">
-
-                        <div class="profile-avatar">
-                            S
                         </div>
 
+                        <div class="profile-dropdown" id="profileDropdown">
 
-                        <div class="profile-info">
+                            <div class="profile-dropdown-header">
+                                <strong>Salman</strong>
+                                <small>Administrator</small>
+                            </div>
 
-                            <strong>Salman</strong>
+                            <hr>
 
-                            <small>Administrator</small>
+                            <button type="button">
+                                <i class="bi bi-person"></i>
+                                Profile
+                            </button>
+
+                            <button type="button">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Logout
+                            </button>
 
                         </div>
 
@@ -177,59 +140,34 @@
 
             </header>
 
-
-
             <!-- Students Content -->
-
             <section class="dashboard-content">
-
-
                 <!-- Page Header -->
-
                 <div class="section-header">
 
                     <div>
-
                         <h2>Students</h2>
-
                         <p>Manage all madrasa students</p>
-
                     </div>
 
-
-                    <button
-                        class="quick-add-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#addStudentModal">
-
+                    <button class="quick-add-btn" data-bs-toggle="modal" data-bs-target="#addStudentModal">
                         <i class="bi bi-person-plus"></i>
                         Add Student
-
                     </button>
 
                 </div>
 
-
                 <!-- Search & Filter -->
-
                 <div class="student-filter-card">
-
                     <!-- Search -->
-
                     <div class="student-search">
 
                         <i class="bi bi-search"></i>
-
-                        <input
-                            type="text"
-                            id="studentSearch"
-                            placeholder="Search student name or roll number...">
+                        <input type="text" id="studentSearch" placeholder="Search student name or roll number...">
 
                     </div>
 
-
                     <!-- Hifz Level -->
-
                     <select id="hifzFilter">
 
                         <option value="">All Hifz Levels</option>
@@ -239,7 +177,6 @@
                         <option value="Revision">Revision</option>
 
                     </select>
-
 
                     <!-- Status -->
 
@@ -252,15 +189,11 @@
 
                     </select>
 
-
                     <!-- Reset -->
 
                     <button type="button" class="filter-reset">
-
                         <i class="bi bi-arrow-clockwise"></i>
-
                         Reset
-
                     </button>
 
                 </div>
@@ -327,34 +260,16 @@
 
                                     <td>
                                         <button
-                                            type="button"
-                                            class="table-action"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#viewStudentModal">
-
+                                            type="button" class="table-action" data-bs-toggle="modal" data-bs-target="#viewStudentModal">
                                             <i class="bi bi-eye"></i>
-
                                         </button>
 
-                                        <button
-                                            type="button"
-                                            class="table-action"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#editStudentModal">
-
+                                        <button type="button" class="table-action" data-bs-toggle="modal" data-bs-target="#editStudentModal">
                                             <i class="bi bi-pencil"></i>
-
                                         </button>
 
-                                        <button
-                                            type="button"
-                                            class="table-action delete"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#deleteStudentModal"
-                                            data-roll="001">
-
+                                        <button type="button" class="table-action delete" data-bs-toggle="modal" data-bs-target="#deleteStudentModal" data-roll="001">
                                             <i class="bi bi-trash"></i>
-
                                         </button>
                                     </td>
                                 </tr>
@@ -377,17 +292,13 @@
                                     </td>
 
                                     <td>
-                                        <span class="level-badge">
-                                            Hifz Level 1
-                                        </span>
+                                        <span class="level-badge">Hifz Level 1</span>
                                     </td>
 
                                     <td>88%</td>
 
                                     <td>
-                                        <span class="status-badge active">
-                                            Active
-                                        </span>
+                                        <span class="status-badge active">Active</span>
                                     </td>
 
                                     <td>
@@ -518,25 +429,11 @@
 
                             <div class="pagination-numbers" id="studentsPaginationNumbers">
 
-                                <button class="pagination-number active">
-                                    1
-                                </button>
-
-                                <button class="pagination-number">
-                                    2
-                                </button>
-
-                                <button class="pagination-number">
-                                    3
-                                </button>
-
-                                <button class="pagination-number">
-                                    4
-                                </button>
-
-                                <button class="pagination-number">
-                                    5
-                                </button>
+                                <button class="pagination-number active">1</button>
+                                <button class="pagination-number">2</button>
+                                <button class="pagination-number">3</button>
+                                <button class="pagination-number">4</button>
+                                <button class="pagination-number">5</button>
 
                             </div>
 
@@ -557,15 +454,12 @@
             </section>
 
             <!-- Add Student Modal -->
-
             <div class="modal fade" id="addStudentModal" tabindex="-1" aria-hidden="true">
 
                 <div class="modal-dialog modal-dialog-centered">
 
                     <div class="modal-content">
-
                         <!-- Modal Header -->
-
                         <div class="modal-header">
 
                             <div>
@@ -573,122 +467,59 @@
                                 <small>Enter student details below</small>
                             </div>
 
-                            <button
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close">
-                            </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
                         </div>
 
-
                         <!-- Modal Body -->
-
                         <div class="modal-body">
 
                             <form id="addStudentForm">
-
                                 <!-- Roll Number -->
-
                                 <div class="mb-3">
 
-                                    <label for="rollNumber" class="form-label">
-                                        Roll Number
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="rollNumber"
-                                        placeholder="Enter roll number">
+                                    <label for="rollNumber" class="form-label">Roll Number</label>
+                                    <input type="text" class="form-control" id="rollNumber" placeholder="Enter roll number">
 
                                 </div>
-
 
                                 <!-- Student Name -->
-
                                 <div class="mb-3">
 
-                                    <label for="studentName" class="form-label">
-                                        Student Name
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        id="studentName"
-                                        placeholder="Enter student name">
+                                    <label for="studentName" class="form-label">Student Name</label>
+                                    <input type="text" class="form-control" id="studentName" placeholder="Enter student name">
 
                                 </div>
 
-
                                 <!-- Hifz Level -->
-
                                 <div class="mb-3">
 
-                                    <label for="studentHifzLevel" class="form-label">
-                                        Hifz Level
-                                    </label>
+                                    <label for="studentHifzLevel" class="form-label">Hifz Level</label>
+                                    <select class="form-select" id="studentHifzLevel">
 
-                                    <select
-                                        class="form-select"
-                                        id="studentHifzLevel">
-
-                                        <option value="">
-                                            Select Hifz Level
-                                        </option>
-
-                                        <option value="Hifz Level 1">
-                                            Hifz Level 1
-                                        </option>
-
-                                        <option value="Hifz Level 2">
-                                            Hifz Level 2
-                                        </option>
-
-                                        <option value="Hifz Level 3">
-                                            Hifz Level 3
-                                        </option>
-
-                                        <option value="Revision">
-                                            Revision
-                                        </option>
+                                        <option value=""> Select Hifz Level</option>
+                                        <option value="Hifz Level 1">Hifz Level 1</option>
+                                        <option value="Hifz Level 2">Hifz Level 2</option>
+                                        <option value="Hifz Level 3">Hifz Level 3</option>
+                                        <option value="Revision">Revision</option>
 
                                     </select>
 
                                 </div>
 
-
                                 <!-- Phone Number -->
-
                                 <div class="mb-3">
 
-                                    <label for="studentPhone" class="form-label">
-                                        Phone Number
-                                    </label>
-
-                                    <input
-                                        type="tel"
-                                        class="form-control"
-                                        id="studentPhone"
-                                        placeholder="Enter phone number">
+                                    <label for="studentPhone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="studentPhone" placeholder="Enter phone number">
 
                                 </div>
 
-
                                 <!-- Joining Date -->
-
                                 <div class="mb-3">
 
-                                    <label for="joiningDate" class="form-label">
-                                        Joining Date
-                                    </label>
-
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        id="joiningDate">
+                                    <label for="joiningDate" class="form-label">Joining Date</label>
+                                    <input type="date" class="form-control" id="joiningDate">
 
                                 </div>
 
@@ -696,22 +527,11 @@
 
                         </div>
 
-
                         <!-- Modal Footer -->
-
                         <div class="modal-footer">
 
-                            <button
-                                type="button"
-                                class="btn btn-light"
-                                data-bs-dismiss="modal">
-                                Cancel
-                            </button>
-
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                id="addStudentBtn">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="addStudentBtn">
                                 <i class="bi bi-person-plus"></i>
                                 Add Student
                             </button>
@@ -729,7 +549,6 @@
     </div>
 
     <!-- Edit Student Modal -->
-
     <div class="modal fade" id="editStudentModal" tabindex="-1" aria-hidden="true">
 
         <div class="modal-dialog modal-dialog-centered">
@@ -742,184 +561,75 @@
 
                     <div>
 
-                        <h5 class="modal-title">
-                            Edit Student
-                        </h5>
-
-                        <small>
-                            Update student details below
-                        </small>
+                        <h5 class="modal-title">Edit Student</h5>
+                        <small>Update student details below</small>
 
                     </div>
 
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close">
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
                 </div>
 
-
                 <!-- Modal Body -->
-
                 <div class="modal-body">
 
                     <form id="editStudentForm">
-
                         <!-- Roll Number -->
-
                         <div class="mb-3">
 
-                            <label
-                                for="editRollNumber"
-                                class="form-label">
-
-                                Roll Number
-
-                            </label>
-
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="editRollNumber"
-                                value="001">
+                            <label for="editRollNumber" class="form-label">Roll Number</label>
+                            <input type="text" class="form-control" id="editRollNumber" value="001">
 
                         </div>
-
 
                         <!-- Student Name -->
-
                         <div class="mb-3">
 
-                            <label
-                                for="editStudentName"
-                                class="form-label">
-
-                                Student Name
-
-                            </label>
-
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="editStudentName"
-                                value="Abdullah">
+                            <label for="editStudentName" class="form-label">Student Name</label>
+                            <input type="text" class="form-control" id="editStudentName" value="Abdullah">
 
                         </div>
 
-
                         <!-- Hifz Level -->
-
                         <div class="mb-3">
 
-                            <label
-                                for="editStudentHifzLevel"
-                                class="form-label">
+                            <label for="editStudentHifzLevel" class="form-label">Hifz Level</label>
+                            <select class="form-select" id="editStudentHifzLevel">
 
-                                Hifz Level
-
-                            </label>
-
-                            <select
-                                class="form-select"
-                                id="editStudentHifzLevel">
-
-                                <option value="Hifz Level 1">
-                                    Hifz Level 1
-                                </option>
-
-                                <option
-                                    value="Hifz Level 2"
-                                    selected>
-
-                                    Hifz Level 2
-
-                                </option>
-
-                                <option value="Hifz Level 3">
-                                    Hifz Level 3
-                                </option>
-
-                                <option value="Revision">
-                                    Revision
-                                </option>
+                                <option value="Hifz Level 1">Hifz Level 1</option>
+                                <option value="Hifz Level 2" selected> Hifz Level 2</option>
+                                <option value="Hifz Level 3">Hifz Level 3</option>
+                                <option value="Revision">Revision</option>
 
                             </select>
 
                         </div>
 
-
                         <!-- Phone Number -->
-
                         <div class="mb-3">
 
-                            <label
-                                for="editStudentPhone"
-                                class="form-label">
-
-                                Phone Number
-
-                            </label>
-
-                            <input
-                                type="tel"
-                                class="form-control"
-                                id="editStudentPhone"
-                                value="9876543210">
+                            <label for="editStudentPhone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="editStudentPhone" value="9876543210">
 
                         </div>
-
 
                         <!-- Joining Date -->
-
                         <div class="mb-3">
 
-                            <label
-                                for="editJoiningDate"
-                                class="form-label">
-
-                                Joining Date
-
-                            </label>
-
-                            <input
-                                type="date"
-                                class="form-control"
-                                id="editJoiningDate"
-                                value="2026-06-10">
+                            <label for="editJoiningDate" class="form-label"> Joining Date</label>
+                            <input type="date" class="form-control" id="editJoiningDate" value="2026-06-10">
 
                         </div>
 
-
                         <!-- Status -->
-
                         <div class="mb-3">
 
-                            <label
-                                for="editStudentStatus"
-                                class="form-label">
+                            <label for="editStudentStatus" class="form-label">Status</label>
+                            <select class="form-select" id="editStudentStatus">
 
-                                Status
-
-                            </label>
-
-                            <select
-                                class="form-select"
-                                id="editStudentStatus">
-
-                                <option value="Active" selected>
-                                    Active
-                                </option>
-
-                                <option value="Leave">
-                                    Leave
-                                </option>
-
-                                <option value="Inactive">
-                                    Inactive
-                                </option>
+                                <option value="Active" selected>Active</option>
+                                <option value="Leave">Leave</option>
+                                <option value="Inactive">Inactive</option>
 
                             </select>
 
@@ -929,28 +639,13 @@
 
                 </div>
 
-
                 <!-- Modal Footer -->
-
                 <div class="modal-footer">
 
-                    <button
-                        type="button"
-                        class="btn btn-light"
-                        data-bs-dismiss="modal">
-
-                        Cancel
-
-                    </button>
-
-                    <button
-                        type="button"
-                        class="btn btn-primary">
-
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveEditStudentBtn">
                         <i class="bi bi-check-lg"></i>
-
                         Save Changes
-
                     </button>
 
                 </div>
@@ -962,7 +657,6 @@
     </div>
 
     <!-- View Student Modal -->
-
     <div class="modal fade" id="viewStudentModal" tabindex="-1" aria-hidden="true">
 
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -973,75 +667,58 @@
 
                 <div class="student-profile-header">
 
-                    <div class="profile-large-avatar">
-                        A
-                    </div>
+                    <div class="profile-large-avatar" id="viewStudentAvatar">A</div>
 
                     <div class="student-profile-name">
 
-                        <h4>Abdullah</h4>
+                        <h4 id="viewStudentName">Abdullah</h4>
+                        <p>Roll No:<span id="viewStudentRoll">001</span></p>
 
-                        <p>Roll No: 001</p>
-
-                        <span class="profile-active-status">
-                            Active
-                        </span>
+                        <span class="profile-active-status" id="viewStudentStatus">Active</span>
 
                     </div>
 
-                    <button
-                        type="button"
-                        class="btn-close ms-auto"
-                        data-bs-dismiss="modal"
-                        aria-label="Close">
-                    </button>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
 
                 </div>
 
-
                 <!-- Profile Body -->
-
                 <div class="modal-body">
-
                     <!-- Basic Information -->
-
                     <div class="profile-section">
 
-                        <h5>
-                            <i class="bi bi-person"></i>
-                            Basic Information
-                        </h5>
+                        <h5><i class="bi bi-person"></i>Basic Information</h5>
 
                         <div class="profile-info-grid">
 
                             <div class="profile-info-item">
                                 <span>Student Name</span>
-                                <strong>Abdullah</strong>
+                                <strong id="viewInfoName">Abdullah</strong>
                             </div>
 
                             <div class="profile-info-item">
                                 <span>Roll Number</span>
-                                <strong>001</strong>
+                                <strong id="viewInfoRoll">001</strong>
                             </div>
 
                             <div class="profile-info-item">
                                 <span>Hifz Level</span>
-                                <strong>Hifz Level 2</strong>
+                                <strong id="viewInfoHifz">Hifz Level 2</strong>
                             </div>
 
                             <div class="profile-info-item">
                                 <span>Phone Number</span>
-                                <strong>9876543210</strong>
+                                <strong id="viewInfoPhone">9876543210</strong>
                             </div>
 
                             <div class="profile-info-item">
                                 <span>Joining Date</span>
-                                <strong>10 June 2026</strong>
+                                <strong id="viewInfoJoiningDate">10 June 2026</strong>
                             </div>
 
                             <div class="profile-info-item">
                                 <span>Status</span>
-                                <strong class="text-success">Active</strong>
+                                <strong class="text-success" id="viewInfoStatus">Active</strong>
                             </div>
 
                         </div>
@@ -1050,29 +727,25 @@
 
 
                     <!-- Attendance -->
-
                     <div class="profile-section">
 
-                        <h5>
-                            <i class="bi bi-calendar-check"></i>
-                            Attendance
-                        </h5>
+                        <h5><i class="bi bi-calendar-check"></i>Attendance</h5>
 
                         <div class="profile-stat-grid">
 
                             <div class="profile-stat">
                                 <span>Present</span>
-                                <strong>92%</strong>
+                                <strong id="viewAttendancePresent">92%</strong>
                             </div>
 
                             <div class="profile-stat">
                                 <span>Absent</span>
-                                <strong>5%</strong>
+                                <strong id="viewAttendanceAbsent">5%</strong>
                             </div>
 
                             <div class="profile-stat">
                                 <span>Leave</span>
-                                <strong>3%</strong>
+                                <strong id="viewAttendanceLeave">3%</strong>
                             </div>
 
                         </div>
@@ -1081,26 +754,19 @@
 
 
                     <!-- Hifz Progress -->
-
                     <div class="profile-section">
 
-                        <h5>
-                            <i class="bi bi-book"></i>
-                            Hifz Progress
-                        </h5>
+                        <h5><i class="bi bi-book"></i>Hifz Progress</h5>
 
                         <div class="profile-progress">
 
                             <div class="profile-progress-header">
                                 <span>Overall Progress</span>
-                                <strong>68%</strong>
+                                <strong id="viewHifzProgress">68%</strong>
                             </div>
 
                             <div class="progress">
-                                <div
-                                    class="progress-bar"
-                                    style="width: 68%;">
-                                </div>
+                                <div class="progress-bar" id="viewHifzProgressBar" style="width: 68%;"></div>
                             </div>
 
                         </div>
@@ -1109,12 +775,12 @@
 
                             <div>
                                 <span>Completed</span>
-                                <strong>20 Juz</strong>
+                                <strong id="viewHifzCompleted">20 Juz</strong>
                             </div>
 
                             <div>
                                 <span>Remaining</span>
-                                <strong>10 Juz</strong>
+                                <strong id="viewHifzRemaining">10 Juz</strong>
                             </div>
 
                         </div>
@@ -1123,28 +789,11 @@
 
                 </div>
 
-
                 <!-- Footer -->
-
                 <div class="modal-footer">
 
-                    <button
-                        type="button"
-                        class="btn btn-light"
-                        data-bs-dismiss="modal">
-
-                        Close
-
-                    </button>
-
-                    <button
-                        type="button"
-                        class="btn btn-primary">
-
-                        <i class="bi bi-pencil"></i>
-                        Edit Student
-
-                    </button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary"><i class="bi bi-pencil"></i>Edit Student</button>
 
                 </div>
 
@@ -1155,40 +804,24 @@
     </div>
 
     <!-- Delete Student Modal -->
-
-    <div
-        class="modal fade"
-        id="deleteStudentModal"
-        tabindex="-1"
-        aria-hidden="true">
+    <div class="modal fade" id="deleteStudentModal" tabindex="-1" aria-hidden="true">
 
         <div class="modal-dialog modal-dialog-centered modal-sm">
 
             <div class="modal-content delete-modal-content">
 
                 <!-- Delete Icon -->
-
                 <div class="delete-modal-body">
 
                     <div class="delete-icon">
-
                         <i class="bi bi-trash"></i>
-
                     </div>
 
-
                     <!-- Title -->
-
-                    <h5>
-                        Delete Student?
-                    </h5>
-
-
+                    <h5>Delete Student?</h5>
                     <!-- Message -->
-
-                    <p>
-                        Are you sure you want to delete
-                        <strong>Abdullah</strong>?
+                    <p>Are you sure you want to delete
+                        <strong id="deleteStudentName">Abdullah</strong>?
                     </p>
 
                     <small>
@@ -1197,29 +830,13 @@
 
                 </div>
 
-
                 <!-- Buttons -->
-
                 <div class="delete-modal-footer">
 
-                    <button
-                        type="button"
-                        class="btn btn-light"
-                        data-bs-dismiss="modal">
-
-                        Cancel
-
-                    </button>
-
-                    <button
-                        type="button"
-                        class="btn btn-danger"
-                        id="confirmDeleteStudentBtn">
-
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteStudentBtn">
                         <i class="bi bi-trash"></i>
-
                         Delete Student
-
                     </button>
 
                 </div>
@@ -1230,9 +847,7 @@
 
     </div>
 
-
     <!-- Bootstrap JS -->
-
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
