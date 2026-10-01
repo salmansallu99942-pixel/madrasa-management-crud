@@ -514,8 +514,8 @@ body{
     border-radius: 50%;
 
     background: conic-gradient(
-        #198754 0deg 313deg,
-        #e9ecef 313deg 360deg
+        #198754 0deg var(--attendance-degree,0deg), 
+        #e9ecef var(--attendance-degree,0deg) 360deg
     );
 
     display: flex;

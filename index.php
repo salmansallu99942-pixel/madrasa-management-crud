@@ -332,7 +332,7 @@
 
                             <div class="attendance-circle">
                                 <div>
-                                    <strong>87%</strong>
+                                    <strong id="dashboardAttendancePercentage">87%</strong>
                                     <span>Present</span>
                                 </div>
                             </div>
@@ -345,7 +345,7 @@
                                         Present
                                     </span>
 
-                                    <strong>20</strong>
+                                    <strong id="dashboardPresentCount">20</strong>
                                 </div>
 
                                 <div class="attendance-item">
@@ -354,7 +354,7 @@
                                         Absent
                                     </span>
 
-                                    <strong>4</strong>
+                                    <strong id="dashboardAbsentCount">4</strong>
                                 </div>
 
                                 <div class="attendance-item">
@@ -363,7 +363,7 @@
                                         Leave
                                     </span>
 
-                                    <strong>2</strong>
+                                    <strong id="dashboardLeaveCount">2</strong>
                                 </div>
 
                             </div>

@@ -382,53 +382,211 @@ if (totalTeachersCount) {
 
     }
 }
-
-
 // ========================================
 // DASHBOARD - ATTENDANCE SYNC
+// TODAY'S ATTENDANCE
 // ========================================
 
-const savedAttendance =
-    localStorage.getItem("attendanceData");
+const dashboardAttendancePercentage =
+    document.getElementById(
+        "dashboardAttendancePercentage"
+    );
+
+const dashboardPresentCount =
+    document.getElementById(
+        "dashboardPresentCount"
+    );
+
+const dashboardAbsentCount =
+    document.getElementById(
+        "dashboardAbsentCount"
+    );
+
+const dashboardLeaveCount =
+    document.getElementById(
+        "dashboardLeaveCount"
+    );
 
 
 if (
-    savedAttendance &&
-    presentTodayCount &&
-    absentTodayCount
+    dashboardAttendancePercentage &&
+    dashboardPresentCount &&
+    dashboardAbsentCount &&
+    dashboardLeaveCount
 ) {
 
-    const attendanceData =
-        JSON.parse(savedAttendance);
-
-
-    const records =
-        attendanceData.records || [];
+    const savedAttendance =
+        localStorage.getItem("attendanceData");
 
 
     let presentCount = 0;
     let absentCount = 0;
+    let leaveCount = 0;
 
 
-    records.forEach(function (record) {
+    if (savedAttendance) {
 
-        if (record.status === "Present") {
-            presentCount++;
+        try {
+
+            const allAttendanceData =
+                JSON.parse(savedAttendance);
+
+
+            // --------------------------------
+            // GET TODAY'S DATE KEY
+            // --------------------------------
+
+            const today =
+                new Date();
+
+
+            const year =
+                today.getFullYear();
+
+
+            const month =
+                String(
+                    today.getMonth() + 1
+                ).padStart(2, "0");
+
+
+            const day =
+                String(
+                    today.getDate()
+                ).padStart(2, "0");
+
+
+            const todayKey =
+                `${year}-${month}-${day}`;
+
+
+            // --------------------------------
+            // GET TODAY'S ATTENDANCE
+            // --------------------------------
+
+            const todayAttendance =
+                allAttendanceData[todayKey];
+
+
+            if (todayAttendance) {
+
+                const records =
+                    todayAttendance.records || [];
+
+
+                records.forEach(
+                    function (record) {
+
+                        if (
+                            record.status ===
+                            "Present"
+                        ) {
+                            presentCount++;
+                        }
+
+
+                        if (
+                            record.status ===
+                            "Absent"
+                        ) {
+                            absentCount++;
+                        }
+
+
+                        if (
+                            record.status ===
+                            "Leave"
+                        ) {
+                            leaveCount++;
+                        }
+
+                    }
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Dashboard attendance error:",
+                error
+            );
+
         }
 
-        if (record.status === "Absent") {
-            absentCount++;
-        }
-
-    });
+    }
 
 
-    presentTodayCount.textContent =
-        presentCount;
+    // --------------------------------
+    // TOTAL MARKED ATTENDANCE
+    // --------------------------------
 
-    absentTodayCount.textContent =
+    const totalAttendance =
+        presentCount +
         absentCount;
 
+
+    // --------------------------------
+    // CALCULATE PERCENTAGE
+    // --------------------------------
+
+    let attendancePercentage = 0;
+
+
+    if (totalAttendance > 0) {
+
+        attendancePercentage =
+            Math.round(
+                (
+                    presentCount /
+                    totalAttendance
+                ) * 100
+            );
+
+    }
+
+
+    // --------------------------------
+    // UPDATE DASHBOARD
+    // --------------------------------
+
+    dashboardAttendancePercentage.textContent =
+        attendancePercentage + "%";
+
+
+
+    dashboardPresentCount.textContent =
+        presentCount;
+
+
+    dashboardAbsentCount.textContent =
+        absentCount;
+
+
+    dashboardLeaveCount.textContent =
+        leaveCount;
+
+
+    // --------------------------------
+    // UPDATE ATTENDANCE CIRCLE
+    // --------------------------------
+
+    const attendanceDegree =
+        attendancePercentage * 3.6;
+
+
+    const attendanceCircle =
+        document.querySelector(".attendance-circle");
+
+
+    if (attendanceCircle) {
+
+        attendanceCircle.style.setProperty(
+            "--attendance-degree",
+            attendanceDegree + "deg"
+        );
+
+    }
 }
 // ========================================
 // ATTENDANCE - STEP 1
@@ -440,31 +598,33 @@ const attendanceTableBody =
 
 if (attendanceTableBody) {
 
-    const attendanceButtons =
-        attendanceTableBody.querySelectorAll(".attendance-option");
+    attendanceTableBody.addEventListener("click", function (event) {
 
-    attendanceButtons.forEach(function (button) {
+        const button = event.target.closest(".attendance-option");
 
-        button.addEventListener("click", function () {
+        if (!button) {
+            return;
+        }
 
-            const currentRow =
-                this.closest("tr");
+        const currentRow = button.closest("tr");
 
-            const rowButtons =
-                currentRow.querySelectorAll(".attendance-option");
+        if (!currentRow) {
+            return;
+        }
 
-            // Remove previous selection
-            rowButtons.forEach(function (item) {
-                item.classList.remove("selected");
-            });
+        const rowButtons =
+            currentRow.querySelectorAll(".attendance-option");
 
-            // Select clicked button
-            this.classList.add("selected");
-
+        rowButtons.forEach(function (item) {
+            item.classList.remove("selected");
         });
 
-    });
+        button.classList.add("selected");
 
+        if (typeof updateAttendanceSummary === "function") {
+            updateAttendanceSummary();
+        }
+    });
 }
 // ========================================
 // ATTENDANCE - STEP 2
@@ -818,11 +978,283 @@ if (attendanceFilterReset) {
 // ========================================
 // ATTENDANCE - STEP 8
 // DATE NAVIGATION
+// DATE-WISE ATTENDANCE SYSTEM
 // ========================================
-const attendanceDate = document.getElementById("attendanceDate");
-const previousDateBtn = document.getElementById("previousDateBtn");
-const todayDateBtn = document.getElementById("todayDateBtn");
-const nextDateBtn = document.getElementById("nextDateBtn");
+
+const attendanceDate =
+    document.getElementById("attendanceDate");
+
+const previousDateBtn =
+    document.getElementById("previousDateBtn");
+
+const todayDateBtn =
+    document.getElementById("todayDateBtn");
+
+const nextDateBtn =
+    document.getElementById("nextDateBtn");
+
+
+// ----------------------------------------
+// SELECTED ATTENDANCE DATE
+// ----------------------------------------
+
+let selectedAttendanceDate =
+    new Date(2026, 8, 22);
+
+
+// ----------------------------------------
+// FORMAT DATE FOR DISPLAY
+// ----------------------------------------
+
+function formatAttendanceDate(date) {
+
+    const options = {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    };
+
+    return date.toLocaleDateString(
+        "en-GB",
+        options
+    );
+}
+
+
+// ----------------------------------------
+// GET DATE KEY
+// Example: 2026-09-30
+// ----------------------------------------
+
+function getAttendanceDateKey() {
+
+    const year =
+        selectedAttendanceDate.getFullYear();
+
+    const month =
+        String(
+            selectedAttendanceDate.getMonth() + 1
+        ).padStart(2, "0");
+
+    const day =
+        String(
+            selectedAttendanceDate.getDate()
+        ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
+// ----------------------------------------
+// GET ALL SAVED ATTENDANCE DATA
+// ----------------------------------------
+
+function getAllAttendanceData() {
+
+    const savedData =
+        localStorage.getItem("attendanceData");
+
+    if (!savedData) {
+        return {};
+    }
+
+    try {
+
+        return JSON.parse(savedData);
+
+    } catch (error) {
+
+        console.error(
+            "Attendance data error:",
+            error
+        );
+
+        return {};
+    }
+}
+
+
+// ----------------------------------------
+// UPDATE DATE ON SCREEN
+// ----------------------------------------
+
+function updateAttendanceDate() {
+
+    if (!attendanceDate) {
+        return;
+    }
+
+    attendanceDate.textContent =
+        formatAttendanceDate(
+            selectedAttendanceDate
+        );
+}
+
+
+// ----------------------------------------
+// DATE-WISE ATTENDANCE LOAD
+// ----------------------------------------
+
+function loadAttendanceForSelectedDate() {
+
+    if (!attendanceTableBody) {
+        return;
+    }
+
+
+    const dateKey =
+        getAttendanceDateKey();
+
+
+    const allAttendanceData =
+        getAllAttendanceData();
+
+
+    const savedData =
+        allAttendanceData[dateKey];
+
+
+    const attendanceRows =
+        attendanceTableBody.querySelectorAll("tr");
+
+
+    // ------------------------------------
+    // CLEAR OLD SELECTIONS
+    // ------------------------------------
+
+    attendanceRows.forEach(function (row) {
+
+        const buttons =
+            row.querySelectorAll(
+                ".attendance-option"
+            );
+
+        buttons.forEach(function (button) {
+
+            button.classList.remove(
+                "selected"
+            );
+
+        });
+
+    });
+
+
+    // ------------------------------------
+    // NO DATA FOR THIS DATE
+    // ------------------------------------
+
+    if (!savedData) {
+
+        if (
+            typeof updateAttendanceSummary ===
+            "function"
+        ) {
+            updateAttendanceSummary();
+        }
+
+        return;
+    }
+
+
+    const savedRecords =
+        savedData.records || [];
+
+
+    // ------------------------------------
+    // APPLY SAVED ATTENDANCE
+    // ------------------------------------
+
+    attendanceRows.forEach(function (row) {
+
+        const rollNumber =
+            row.getAttribute("data-roll");
+
+
+        const savedStudent =
+            savedRecords.find(function (record) {
+
+                return record.roll === rollNumber;
+
+            });
+
+
+        if (!savedStudent) {
+            return;
+        }
+
+
+        let buttonSelector = "";
+
+
+        if (
+            savedStudent.status === "Present"
+        ) {
+
+            buttonSelector =
+                ".attendance-option.present";
+
+        }
+
+        else if (
+            savedStudent.status === "Absent"
+        ) {
+
+            buttonSelector =
+                ".attendance-option.absent";
+
+        }
+
+        else if (
+            savedStudent.status === "Leave"
+        ) {
+
+            buttonSelector =
+                ".attendance-option.leave";
+
+        }
+
+
+        if (buttonSelector) {
+
+            const selectedButton =
+                row.querySelector(
+                    buttonSelector
+                );
+
+
+            if (selectedButton) {
+
+                selectedButton.classList.add(
+                    "selected"
+                );
+
+            }
+
+        }
+
+    });
+
+
+    // ------------------------------------
+    // UPDATE SUMMARY
+    // ------------------------------------
+
+    if (
+        typeof updateAttendanceSummary ===
+        "function"
+    ) {
+
+        updateAttendanceSummary();
+
+    }
+
+}
+
+
+// ----------------------------------------
+// DATE BUTTON EVENTS
+// ----------------------------------------
 
 if (
     attendanceDate &&
@@ -830,37 +1262,10 @@ if (
     todayDateBtn &&
     nextDateBtn
 ) {
-    // Starting attendance date
-    let selectedAttendanceDate =
-        new Date(2026, 8, 22);
 
-    // Format date
-    function formatAttendanceDate(date) {
 
-        const options = {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        };
+    // Previous Date
 
-        return date.toLocaleDateString(
-            "en-GB",
-            options
-        );
-
-    }
-
-    // Update date on screen
-    function updateAttendanceDate() {
-
-        attendanceDate.textContent =
-            formatAttendanceDate(
-                selectedAttendanceDate
-            );
-
-    }
-
-    // PREVIOUS DATE
     previousDateBtn.addEventListener(
         "click",
         function () {
@@ -871,10 +1276,14 @@ if (
 
             updateAttendanceDate();
 
+            loadAttendanceForSelectedDate();
+
         }
     );
 
-    // TODAY
+
+    // Today
+
     todayDateBtn.addEventListener(
         "click",
         function () {
@@ -884,10 +1293,14 @@ if (
 
             updateAttendanceDate();
 
+            loadAttendanceForSelectedDate();
+
         }
     );
 
-    // NEXT DATE
+
+    // Next Date
+
     nextDateBtn.addEventListener(
         "click",
         function () {
@@ -898,30 +1311,44 @@ if (
 
             updateAttendanceDate();
 
+            loadAttendanceForSelectedDate();
+
         }
     );
 
-    // Show initial date
+
+    // Initial Date Display
+
     updateAttendanceDate();
 
 }
 // ========================================
 // ATTENDANCE - STEP 9
 // SAVE ATTENDANCE
+// DATE-WISE STORAGE
 // ========================================
 
 const saveAttendanceBtn =
     document.getElementById("saveAttendanceBtn");
 
-
-if (saveAttendanceBtn && attendanceTableBody) {
+if (saveAttendanceBtn) {
 
     saveAttendanceBtn.addEventListener(
         "click",
         function () {
 
+            if (!attendanceTableBody) {
+                return;
+            }
+
+
+            const dateKey =
+                getAttendanceDateKey();
+
+
             const attendanceRows =
                 attendanceTableBody.querySelectorAll("tr");
+
 
             const attendanceRecords = [];
 
@@ -931,10 +1358,18 @@ if (saveAttendanceBtn && attendanceTableBody) {
                 const rollNumber =
                     row.getAttribute("data-roll");
 
+
+                const nameElement =
+                    row.querySelector(
+                        ".attendance-student strong"
+                    );
+
+
                 const studentName =
-                    row.cells[1]
-                        ? row.cells[1].textContent.trim()
+                    nameElement
+                        ? nameElement.textContent.trim()
                         : "";
+
 
                 const selectedButton =
                     row.querySelector(
@@ -955,7 +1390,9 @@ if (saveAttendanceBtn && attendanceTableBody) {
                         "present"
                     )
                 ) {
+
                     status = "Present";
+
                 }
 
                 else if (
@@ -963,7 +1400,9 @@ if (saveAttendanceBtn && attendanceTableBody) {
                         "absent"
                     )
                 ) {
+
                     status = "Absent";
+
                 }
 
                 else if (
@@ -971,38 +1410,55 @@ if (saveAttendanceBtn && attendanceTableBody) {
                         "leave"
                     )
                 ) {
+
                     status = "Leave";
+
                 }
 
 
                 attendanceRecords.push({
+
                     roll: rollNumber,
+
                     name: studentName,
+
                     status: status
+
                 });
 
             });
 
 
-            // Get selected attendance date
-            const selectedDate =
-                attendanceDate.textContent.trim();
+            // ------------------------------------
+            // GET ALL EXISTING DATE-WISE DATA
+            // ------------------------------------
+
+            const allAttendanceData =
+                getAllAttendanceData();
 
 
-            // Create complete attendance data
-            const attendanceData = {
+            // ------------------------------------
+            // SAVE THIS DATE ONLY
+            // ------------------------------------
 
-                date: selectedDate,
+            allAttendanceData[dateKey] = {
+
+                date: dateKey,
 
                 records: attendanceRecords
 
             };
 
 
-            // Save to localStorage
+            // ------------------------------------
+            // SAVE BACK TO LOCAL STORAGE
+            // ------------------------------------
+
             localStorage.setItem(
                 "attendanceData",
-                JSON.stringify(attendanceData)
+                JSON.stringify(
+                    allAttendanceData
+                )
             );
 
 
@@ -1010,120 +1466,29 @@ if (saveAttendanceBtn && attendanceTableBody) {
                 "Attendance saved successfully!"
             );
 
+
+            // ------------------------------------
+            // REFRESH HISTORY
+            // ------------------------------------
+
+            if (
+                typeof loadAttendanceHistory ===
+                "function"
+            ) {
+
+                loadAttendanceHistory();
+
+            }
+
         }
     );
 
 }
-// ========================================
-// ATTENDANCE - STEP 9.1
-// LOAD SAVED ATTENDANCE
-// ========================================
 
-if (attendanceTableBody) {
-
-    const savedAttendance =
-        localStorage.getItem("attendanceData");
-
-
-    if (savedAttendance) {
-
-        const attendanceData =
-            JSON.parse(savedAttendance);
-
-
-        const savedRecords =
-            attendanceData.records || [];
-
-
-        const attendanceRows =
-            attendanceTableBody.querySelectorAll("tr");
-
-
-        attendanceRows.forEach(function (row) {
-
-            const rollNumber =
-                row.getAttribute("data-roll");
-
-
-            const savedStudent =
-                savedRecords.find(function (record) {
-
-                    return record.roll === rollNumber;
-
-                });
-
-
-            if (!savedStudent) {
-                return;
-            }
-
-
-            const rowButtons =
-                row.querySelectorAll(".attendance-option");
-
-
-            rowButtons.forEach(function (button) {
-
-                button.classList.remove("selected");
-
-            });
-
-
-            if (savedStudent.status === "Present") {
-
-                const presentButton =
-                    row.querySelector(
-                        ".attendance-option.present"
-                    );
-
-                if (presentButton) {
-                    presentButton.classList.add("selected");
-                }
-
-            }
-
-
-            if (savedStudent.status === "Absent") {
-
-                const absentButton =
-                    row.querySelector(
-                        ".attendance-option.absent"
-                    );
-
-                if (absentButton) {
-                    absentButton.classList.add("selected");
-                }
-
-            }
-
-
-            if (savedStudent.status === "Leave") {
-
-                const leaveButton =
-                    row.querySelector(
-                        ".attendance-option.leave"
-                    );
-
-                if (leaveButton) {
-                    leaveButton.classList.add("selected");
-                }
-
-            }
-
-        });
-
-
-        // Update summary after loading saved attendance
-        if (typeof updateAttendanceSummary === "function") {
-            updateAttendanceSummary();
-        }
-
-    }
-
-}
 // ========================================
 // ATTENDANCE - STEP 10
 // DYNAMIC ATTENDANCE HISTORY
+// DATE-WISE HISTORY
 // ========================================
 
 const attendanceHistoryTableBody =
@@ -1132,95 +1497,296 @@ const attendanceHistoryTableBody =
     );
 
 
-if (attendanceHistoryTableBody) {
+function loadAttendanceHistory() {
 
-    const savedAttendance =
-        localStorage.getItem("attendanceData");
+    if (!attendanceHistoryTableBody) {
+        return;
+    }
 
-    if (savedAttendance) {
-        const attendanceData =
-            JSON.parse(savedAttendance);
 
-        const records =
-            attendanceData.records || [];
+    const allAttendanceData =
+        getAllAttendanceData();
 
-        // Count attendance status
-        let presentCount = 0;
-        let absentCount = 0;
-        let leaveCount = 0;
 
-        records.forEach(function (record) {
+    const attendanceDates =
+        Object.keys(allAttendanceData);
 
-            if (record.status === "Present") {
-                presentCount++;
-            }
-            if (record.status === "Absent") {
-                absentCount++;
-            }
-            if (record.status === "Leave") {
-                leaveCount++;
-            }
 
-        });
+    // ------------------------------------
+    // NO SAVED HISTORY
+    // ------------------------------------
 
-        // Get saved date
-        const savedDate =
-            attendanceData.date;
+    if (attendanceDates.length === 0) {
 
-        // Convert date for display
-        const historyDate =
-            new Date(savedDate);
-
-        const formattedDate =
-            historyDate.toLocaleDateString(
-                "en-GB",
-                {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                }
-            );
-
-        const dayName =
-            historyDate.toLocaleDateString(
-                "en-GB",
-                {
-                    weekday: "long"
-                }
-            );
-
-        // Create history row
         attendanceHistoryTableBody.innerHTML = `
             <tr>
+                <td colspan="6" class="text-center">
+                    No attendance history available.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    // ------------------------------------
+    // SORT DATES - NEWEST FIRST
+    // ------------------------------------
+
+    attendanceDates.sort(
+        function (dateA, dateB) {
+
+            return new Date(dateB) - new Date(dateA);
+
+        }
+    );
+
+
+    // ------------------------------------
+    // CREATE HISTORY ROWS
+    // ------------------------------------
+
+    attendanceHistoryTableBody.innerHTML = "";
+
+
+    attendanceDates.forEach(
+        function (dateKey) {
+
+            const attendanceData =
+                allAttendanceData[dateKey];
+
+
+            const records =
+                attendanceData.records || [];
+
+
+            // --------------------------------
+            // COUNT ATTENDANCE STATUS
+            // --------------------------------
+
+            let presentCount = 0;
+            let absentCount = 0;
+            let leaveCount = 0;
+
+
+            records.forEach(
+                function (record) {
+
+                    if (
+                        record.status === "Present"
+                    ) {
+                        presentCount++;
+                    }
+
+                    if (
+                        record.status === "Absent"
+                    ) {
+                        absentCount++;
+                    }
+
+                    if (
+                        record.status === "Leave"
+                    ) {
+                        leaveCount++;
+                    }
+
+                }
+            );
+
+
+            // --------------------------------
+            // CREATE LOCAL DATE
+            // --------------------------------
+
+            const dateParts =
+                dateKey.split("-");
+
+
+            const historyDate =
+                new Date(
+                    Number(dateParts[0]),
+                    Number(dateParts[1]) - 1,
+                    Number(dateParts[2])
+                );
+
+
+            // --------------------------------
+            // FORMAT DATE
+            // --------------------------------
+
+            const formattedDate =
+                historyDate.toLocaleDateString(
+                    "en-GB",
+                    {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+                    }
+                );
+
+
+            // --------------------------------
+            // GET DAY NAME
+            // --------------------------------
+
+            const dayName =
+                historyDate.toLocaleDateString(
+                    "en-GB",
+                    {
+                        weekday: "long"
+                    }
+                );
+
+
+            // --------------------------------
+            // CREATE HISTORY ROW
+            // --------------------------------
+
+            const historyRow =
+                document.createElement("tr");
+
+
+            historyRow.innerHTML = `
                 <td>${formattedDate}</td>
+
                 <td>${dayName}</td>
+
                 <td>
                     <span class="history-present">
                         ${presentCount}
                     </span>
                 </td>
+
                 <td>
                     <span class="history-absent">
                         ${absentCount}
                     </span>
                 </td>
+
                 <td>
                     <span class="history-leave">
                         ${leaveCount}
                     </span>
                 </td>
+
                 <td>
                     <span class="history-status saved">
                         Saved
                     </span>
                 </td>
-            </tr>
-        `;
+            `;
 
-    }
+
+            attendanceHistoryTableBody.appendChild(
+                historyRow
+            );
+
+        }
+    );
 
 }
 
+
+// ----------------------------------------
+// LOAD HISTORY WHEN PAGE OPENS
+// ----------------------------------------
+
+loadAttendanceHistory();
+// ========================================
+// ATTENDANCE - STUDENT DATA
+// LOAD STUDENTS FROM LOCAL STORAGE
+// ========================================
+
+const attendanceStudents =
+    document.getElementById("attendanceTableBody");
+
+function loadAttendanceStudents() {
+
+    if (!attendanceStudents) {
+        return;
+    }
+
+    const savedStudents =
+        localStorage.getItem("studentsData");
+
+    if (!savedStudents) {
+        return;
+    }
+
+    const students =
+        JSON.parse(savedStudents);
+
+    attendanceStudents.innerHTML = "";
+
+    students.forEach(function (student) {
+
+        const row =
+            document.createElement("tr");
+
+        row.setAttribute(
+            "data-roll",
+            student.roll
+        );
+
+        row.innerHTML = `
+            <td>${student.roll}</td>
+
+            <td>
+                <div class="attendance-student">
+                    <div class="attendance-avatar">
+                        ${student.name.charAt(0)}
+                    </div>
+
+                    <div>
+                        <strong>${student.name}</strong>
+                        <small>Student ID: STD${student.roll}</small>
+                    </div>
+                </div>
+            </td>
+
+            <td>
+                <span class="attendance-level">
+                    ${student.hifzLevel}
+                </span>
+            </td>
+
+            <td>
+                <div class="attendance-options">
+
+                    <button
+                        type="button"
+                        class="attendance-option present">
+                        <i class="bi bi-check"></i>
+                        Present
+                    </button>
+
+                    <button
+                        type="button"
+                        class="attendance-option absent">
+                        <i class="bi bi-x"></i>
+                        Absent
+                    </button>
+
+                    <button
+                        type="button"
+                        class="attendance-option leave">
+                        <i class="bi bi-dash"></i>
+                        Leave
+                    </button>
+
+                </div>
+            </td>
+        `;
+
+        attendanceStudents.appendChild(row);
+
+    });
+
+}
+
+loadAttendanceStudents();
+loadAttendanceForSelectedDate();
 // ========================================
 // STUDENTS PAGE
 // ========================================
@@ -1362,7 +1928,7 @@ function renderStudentPagination() {
 
 if (studentNextBtn) {
 
-    studentNextBtn.addEventListener("click", function() {
+    studentNextBtn.addEventListener("click", function () {
 
         const totalPages =
             getTotalStudentPages();
@@ -1385,7 +1951,7 @@ if (studentNextBtn) {
 
 if (studentsPreBtn) {
 
-    studentsPreBtn.addEventListener("click", function() {
+    studentsPreBtn.addEventListener("click", function () {
 
         if (currentStudentPage > 1) {
 
